@@ -15,8 +15,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  
   final AuthController _authController = AuthController();
+  
   bool obscurePassword = true;
 
   Future<void> _handleSignup() async {
@@ -34,12 +34,12 @@ class _SignupScreenState extends State<SignupScreen> {
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Account Created successfully! Please log in."),
+          content: Text("Account Created successfully! You can log in now."),
           backgroundColor: Colors.green,
         ),
       );
       
-      // 🚀 The Magic Link: Automatically returns back to the login screen!
+      // Pops the registration off navigation stack to reveal the login underlay seamlessly
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -64,68 +64,80 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0, iconTheme: const IconThemeData(color: Colors.black)),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent, 
+        elevation: 0, 
+        iconTheme: const IconThemeData(color: Colors.black),
+      ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: ListenableBuilder(
-            listenable: _authController,
-            builder: (context, child) {
-              return Form(
-                key: _formKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text("Create Account", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 8),
-                    const Text("Join our microbiology learning community", style: TextStyle(color: Colors.grey)),
-                    const SizedBox(height: 40),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: ListenableBuilder(
+              listenable: _authController,
+              builder: (context, child) {
+                return Form(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Create Account", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 8),
+                      const Text("Join our microbiology learning community", style: TextStyle(color: Colors.grey)),
+                      const SizedBox(height: 40),
 
-                    AuthTextField(
-                      controller: nameController,
-                      label: "Full Name",
-                      icon: Icons.person_outline,
-                      textInputAction: TextInputAction.next,
-                      validator: (value) => value == null || value.isEmpty ? "Enter your name" : null,
-                    ),
-                    const SizedBox(height: 20),
-
-                    AuthTextField(
-                      controller: emailController,
-                      label: "Email",
-                      icon: Icons.email_outlined,
-                      keyboardType: TextInputType.emailAddress,
-                      textInputAction: TextInputAction.next,
-                      validator: (value) => value == null || !value.contains('@') ? "Enter valid email" : null,
-                    ),
-                    const SizedBox(height: 20),
-
-                    AuthTextField(
-                      controller: passwordController,
-                      label: "Password",
-                      icon: Icons.lock_outline,
-                      obscureText: obscurePassword,
-                      textInputAction: TextInputAction.done,
-                      onFieldSubmitted: (_) => _handleSignup(),
-                      suffixIcon: IconButton(
-                        icon: Icon(obscurePassword ? Icons.visibility_off : Icons.visibility),
-                        onPressed: () => setState(() => obscurePassword = !obscurePassword),
+                      AuthTextField(
+                        controller: nameController,
+                        label: "Full Name",
+                        icon: Icons.person_outline,
+                        textInputAction: TextInputAction.next,
+                        validator: (value) => value == null || value.isEmpty ? "Enter your name" : null,
                       ),
-                      validator: (value) => value == null || value.length < 6 ? "Minimum 6 characters" : null,
-                    ),
-                    const SizedBox(height: 40),
+                      const SizedBox(height: 20),
 
-                    AuthButton(
-                      text: "Sign Up",
-                      onPressed: _handleSignup,
-                      isLoading: _authController.isLoading,
-                    ),
-                    const SizedBox(height: 32),
-                  ],
-                ),
-              );
-            },
+                      AuthTextField(
+                        controller: emailController,
+                        label: "Email",
+                        icon: Icons.email_outlined,
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) return "Enter email";
+                          final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                          if (!emailRegex.hasMatch(value.trim())) return "Enter valid email format";
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+
+                      AuthTextField(
+                        controller: passwordController,
+                        label: "Password",
+                        icon: Icons.lock_outline,
+                        obscureText: obscurePassword,
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (_) => _handleSignup(),
+                        suffixIcon: IconButton(
+                          icon: Icon(obscurePassword ? Icons.visibility_off : Icons.visibility),
+                          onPressed: () => setState(() => obscurePassword = !obscurePassword),
+                        ),
+                        validator: (value) => value == null || value.length < 6 ? "Minimum 6 characters" : null,
+                      ),
+                      const SizedBox(height: 40),
+
+                      AuthButton(
+                        text: "Sign Up",
+                        onPressed: _handleSignup,
+                        isLoading: _authController.isLoading,
+                      ),
+                      const SizedBox(height: 32),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),

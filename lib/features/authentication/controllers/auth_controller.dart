@@ -10,12 +10,16 @@ class AuthController extends ChangeNotifier {
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
-  // Handles User Sign Up
-  Future<bool> signUp(String name, String email, String password) async {
+  // Global State Reset Configuration
+  void _resetState() {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
+  }
 
+  // Sign-Up Action Handler
+  Future<bool> signUp(String name, String email, String password) async {
+    _resetState();
     try {
       await _authRepository.registerUser(name, email, password);
       _isLoading = false;
@@ -29,12 +33,9 @@ class AuthController extends ChangeNotifier {
     }
   }
 
-  // Handles User Login
+  // Credentials Verification Handler
   Future<bool> login(String email, String password) async {
-    _isLoading = true;
-    _errorMessage = null;
-    notifyListeners();
-
+    _resetState();
     try {
       await _authRepository.signInWithEmailAndPassword(email, password);
       _isLoading = false;
@@ -48,18 +49,33 @@ class AuthController extends ChangeNotifier {
     }
   }
 
-  // Handles Google Login
+  // Native Account Selection Overlay Hook
   Future<String?> loginWithGoogle() async {
-    _isLoading = true;
-    notifyListeners();
-
+    _resetState();
     try {
       final displayName = await _authRepository.signInWithGoogle();
       _isLoading = false;
       notifyListeners();
       return displayName;
-    } catch (_) {
+    } catch (e) {
       _isLoading = false;
+      _errorMessage = e.toString().replaceAll("Exception: ", "");
+      notifyListeners();
+      return null;
+    }
+  }
+
+  // Password Recovery Matrix Processor
+  Future<String?> forgotPassword(String email) async {
+    _resetState();
+    try {
+      final password = await _authRepository.recoverPassword(email);
+      _isLoading = false;
+      notifyListeners();
+      return password;
+    } catch (e) {
+      _isLoading = false;
+      _errorMessage = e.toString().replaceAll("Exception: ", "");
       notifyListeners();
       return null;
     }
