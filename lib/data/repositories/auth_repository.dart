@@ -45,19 +45,23 @@ class AuthRepository {
       // Access the modern global thread-safe singleton manager
       final googleSignIn = GoogleSignIn.instance;
 
-      // Explicit initialization is mandatory before hitting native OS modules
-      await googleSignIn.initialize();
+      // UPDATED: Added the serverClientId parameter hook needed for the handshake
+      await googleSignIn.initialize(
+        serverClientId: "396894514828-tk1cgop21q20g85itih68tr4jgv1kafc.apps.googleusercontent.com",
+      );
 
       // Fire modern Android Credential Manager / iOS Modal Sheet view layer
-      final GoogleSignInAccount? googleUser = await googleSignIn.authenticate();
+      final GoogleSignInAccount googleUser = await googleSignIn.authenticate();
 
-      if (googleUser == null) {
-        throw Exception("Sign in cancelled by user.");
-      }
+      //FIXED: Removed the 'if (googleUser == null)' condition which caused the dead code warning
 
       // Return the verified string name directly back up to controllers
       return googleUser.displayName ?? "Google User";
     } catch (error) {
+      // Gracefully interpret explicit cancellations versus configurations crash logs
+      if (error.toString().contains("canceled") || error.toString().contains("cancelled")) {
+        throw Exception("Sign in cancelled by user.");
+      }
       // Keep background system exceptions legible
       throw Exception(error.toString());
     }
