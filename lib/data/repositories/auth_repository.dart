@@ -1,81 +1,89 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthRepository {
-  // Direct In-Memory Database Matrix for real-time testing without database latency
-  static final Map<String, Map<String, String>> _userDatabase = {
-    "micro@test.com": {"name": "Alex", "password": "password123"}
-  };
+  // Global reference pointer directly to your active Firebase project instance
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // 1. Fully-Functional Signup Pipeline
+  // 1. Fully-Functional Real Firebase Signup Pipeline
   Future<void> registerUser(String name, String email, String password) async {
-    await Future.delayed(const Duration(milliseconds: 800)); // Simulate remote network lag
+    try {
+      final cleanEmail = email.trim().toLowerCase();
+      
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: cleanEmail,
+        password: password,
+      );
 
-    final cleanEmail = email.trim().toLowerCase();
-
-    if (_userDatabase.containsKey(cleanEmail)) {
-      throw Exception("An account with this email already exists.");
+      await userCredential.user?.updateDisplayName(name);
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.message ?? "An error occurred during registration.");
+    } catch (e) {
+      throw Exception(e.toString());
     }
-
-    // Persist new credential values into live application state
-    _userDatabase[cleanEmail] = {
-      "name": name,
-      "password": password,
-    };
   }
 
-  // 2. Fully-Functional Login Verification Flow
+  // 2. Fully-Functional Real Firebase Login Verification Flow
   Future<void> signInWithEmailAndPassword(String email, String password) async {
-    await Future.delayed(const Duration(milliseconds: 800));
-
-    final cleanEmail = email.trim().toLowerCase();
-
-    if (!_userDatabase.containsKey(cleanEmail)) {
-      throw Exception("No user found with this email. Please sign up.");
-    }
-
-    if (_userDatabase[cleanEmail]?["password"] != password) {
-      throw Exception("Incorrect password. Please try again.");
+    try {
+      final cleanEmail = email.trim().toLowerCase();
+      
+      await _auth.signInWithEmailAndPassword(
+        email: cleanEmail,
+        password: password,
+      );
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.message ?? "An error occurred during sign in.");
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 
-  // 3. Modernized Google Account Authentication Engine (google_sign_in v7+)
+  // 3. Complete Google Account Ecosystem Authentication Engine
   Future<String> signInWithGoogle() async {
     try {
-      // Access the modern global thread-safe singleton manager
       final googleSignIn = GoogleSignIn.instance;
 
-      // UPDATED: Added the serverClientId parameter hook needed for the handshake
       await googleSignIn.initialize(
         serverClientId: "396894514828-tk1cgop21q20g85itih68tr4jgv1kafc.apps.googleusercontent.com",
       );
 
-      // Fire modern Android Credential Manager / iOS Modal Sheet view layer
+      // Trigger the physical device native account window prompt layer
       final GoogleSignInAccount googleUser = await googleSignIn.authenticate();
+      
+      // Grabbing the authentication details synchronously
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
-      //FIXED: Removed the 'if (googleUser == null)' condition which caused the dead code warning
+      // Passing only the idToken since Firebase handles identity verification safely without the accessToken
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+      );
 
-      // Return the verified string name directly back up to controllers
-      return googleUser.displayName ?? "Google User";
+      UserCredential userCredential = await _auth.signInWithCredential(credential);
+
+      return userCredential.user?.displayName ?? "Google User";
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.message ?? "Google Sign-In validation failed on the backend.");
     } catch (error) {
-      // Gracefully interpret explicit cancellations versus configurations crash logs
       if (error.toString().contains("canceled") || error.toString().contains("cancelled")) {
         throw Exception("Sign in cancelled by user.");
       }
-      // Keep background system exceptions legible
       throw Exception(error.toString());
     }
   }
 
-  // 4. Reactive Credentials Retrieval Flow
-  Future<String> recoverPassword(String email) async {
-    await Future.delayed(const Duration(milliseconds: 600));
-    final cleanEmail = email.trim().toLowerCase();
-
-    if (!_userDatabase.containsKey(cleanEmail)) {
-      throw Exception("No account registered with this email address.");
+  // 4. Real Firebase Password Reset Email Engine
+  Future<void> recoverPassword(String email) async {
+    try {
+      final cleanEmail = email.trim().toLowerCase();
+      
+      // Instructs Firebase to route a localized secure dashboard link directly to the target mailbox
+      await _auth.sendPasswordResetEmail(email: cleanEmail);
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.message ?? "Failed to fire off password recovery email.");
+    } catch (e) {
+      throw Exception(e.toString());
     }
-
-    return _userDatabase[cleanEmail]?["password"] ?? "password123";
   }
 }

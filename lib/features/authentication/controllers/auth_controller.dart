@@ -69,10 +69,14 @@ class AuthController extends ChangeNotifier {
   Future<String?> forgotPassword(String email) async {
     _resetState();
     try {
-      final password = await _authRepository.recoverPassword(email);
+      //FIXED: Directly await the void method instead of saving it into a variable
+      await _authRepository.recoverPassword(email);
+      
       _isLoading = false;
       notifyListeners();
-      return password;
+      
+      //FIXED: Return an explicit confirmation message back to your UI layer
+      return "Password reset link sent! Check your inbox.";
     } catch (e) {
       _isLoading = false;
       _errorMessage = e.toString().replaceAll("Exception: ", "");
