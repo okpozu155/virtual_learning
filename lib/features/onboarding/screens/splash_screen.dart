@@ -33,14 +33,14 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/microscope.png',
-              height: 120,
+              'lib/assets/images/microscope.png',
+              height: 240,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
             const Text(
               'Explore, Learn, Understand',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 28,
                 fontWeight: FontWeight.bold,
               ),
             ),

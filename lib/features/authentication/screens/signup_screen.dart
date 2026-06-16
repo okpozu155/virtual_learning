@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 import '../../../core/utils/validators.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SignupPage extends StatefulWidget {
@@ -22,11 +21,10 @@ class _SignupPageState extends State<SignupPage> {
   bool loading = false;
 
   Future<void> signUp() async {
-    if (_passwordController.text !=
-        _confirmPasswordController.text) {
+    if (_passwordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Passwords do not match"),
+          content: Text('Passwords do not match'),
         ),
       );
       return;
@@ -42,22 +40,34 @@ class _SignupPageState extends State<SignupPage> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Account created successfully"),
+          content: Text('Account created successfully'),
         ),
       );
 
-      Navigator.pop(context);
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const LoginPage(),
+          ),
+        );
+      }
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.message ?? "Signup failed"),
+          content: Text(
+            e.message ?? 'Signup failed',
+          ),
         ),
       );
     } finally {
-      setState(() => loading = false);
+      if (mounted) {
+        setState(() => loading = false);
+      }
     }
   }
 
+  // ==================== UPDATED HELPER WIDGET ====================
   Widget buildField(
       TextEditingController controller,
       IconData icon,
@@ -70,20 +80,32 @@ class _SignupPageState extends State<SignupPage> {
       decoration: InputDecoration(
         prefixIcon: Icon(icon),
         filled: true,
-        fillColor: const Color(0xffF5E7B2),
+        fillColor: const Color.fromARGB(255, 140, 133, 236), // FIXED: Changed from yellow hex to light gray
         hintText: hint,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none, // Optional: removes the black outline border for a cleaner look
+        ),
       ),
     );
   }
+  // ==============================================================
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Create Account'),
+        centerTitle: true,
+      ),
+
+
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(22),
         child: Column(
           children: [
-            const SizedBox(height: 40),
+            const SizedBox(height: 20),
 
             buildField(
               _nameController,
@@ -119,7 +141,7 @@ class _SignupPageState extends State<SignupPage> {
               true,
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
 
             SizedBox(
               width: double.infinity,
@@ -131,9 +153,42 @@ class _SignupPageState extends State<SignupPage> {
                     : const Text("Sign Up"),
               ),
             ),
+
+            const SizedBox(height: 20),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "Already have an account?",
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const LoginPage(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    "Sign In",
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
   }
 }
