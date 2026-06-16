@@ -30,6 +30,21 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_riverpod: ^2.0.0
+  go_router:
+  sqflite:
+  path_provider:
+  shared_preferences:
+  hive:
+  cached_network_image:
+  photo_view:
+  image_picker:
+  flutter_chat_ui:
+  flutter_markdown_plus:
+  lottie:
+  firebase_core:
+  firebase_auth:
+  cloud_firestore:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

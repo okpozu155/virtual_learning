@@ -1,0 +1,16 @@
+[
+  {
+    "id": "1",
+    "title": "Blood Smear",
+    "imagePath": "assets/images/slides/blood_smear.png",
+    "category": "Hematology",
+    "description": "Human blood smear showing RBCs and malaria parasites."
+  },
+  {
+    "id": "2",
+    "title": "Plant Cell",
+    "imagePath": "assets/images/slides/plant_cell.jpg",
+    "category": "Botany",
+    "description": "Plant cell under microscope."
+  }
+]
