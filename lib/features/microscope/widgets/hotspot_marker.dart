@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import '../../../data/models/hotspot_model.dart';
 
 class HotspotMarker extends StatelessWidget {
-  final dynamic hotspot;
+
+  final HotspotModel hotspot;
   final VoidCallback onTap;
 
   const HotspotMarker({
@@ -13,8 +15,8 @@ class HotspotMarker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      left: hotspot.x,
-      top: hotspot.y,
+      left: hotspot.x * MediaQuery.of(context).size.width,
+      top: hotspot.y * MediaQuery.of(context).size.height,
       child: GestureDetector(
         onTap: onTap,
         child: Container(

@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
-
 import '../controllers/microscope_controller.dart';
 import '../widgets/image_viewer.dart';
 import '../widgets/hotspot_marker.dart';
 import '../widgets/zoom_controls.dart';
+import '../../../features/quiz/screens/quiz_screen.dart';
+import '../../../data/models/slide_model.dart';
+import '../../../data/models/hotspot_model.dart';
+import '../../../data/repositories/hotspot_repository.dart';
 
 class MicroscopeScreen extends StatefulWidget {
-  const MicroscopeScreen({super.key});
+  final SlideModel slide;
+
+  const MicroscopeScreen({
+    super.key,
+    required this.slide,
+  });
 
   @override
   State<MicroscopeScreen> createState() => _MicroscopeScreenState();
@@ -15,13 +23,33 @@ class MicroscopeScreen extends StatefulWidget {
 class _MicroscopeScreenState extends State<MicroscopeScreen> {
   final MicroscopeController controller = MicroscopeController();
 
+  final HotspotRepository hotspotRepository =
+  HotspotRepository();
+
+  @override
+  void initState() {
+    super.initState();
+    loadHotspots();
+  }
+
+  Future<void> loadHotspots() async {
+    controller.hotspots =
+    await hotspotRepository.getHotspots(
+      widget.slide.id,
+    );
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   @override
   void dispose() {
     controller.dispose();
     super.dispose();
   }
 
-  void _showHotspotInfo(dynamic hotspot) {
+  void _showHotspotInfo(HotspotModel hotspot) {
     Navigator.pushNamed(
       context,
       '/hotspot-info',
@@ -29,67 +57,74 @@ class _MicroscopeScreenState extends State<MicroscopeScreen> {
     );
   }
 
-  void _openQuiz() {
-    Navigator.pushNamed(context, '/quiz');
-  }
-
   void _openAITutor() {
-    Navigator.pushNamed(context, '/ai-tutor');
+    Navigator.pushNamed(
+      context,
+      '/ai-tutor',
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(
+      "Hotspot count: ${controller.hotspots.length}",
+    );
+
     return Scaffold(
       backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black.withOpacity(.85),
+        elevation: 0,
+        title: Text(
+          widget.slide.title,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: SafeArea(
         child: Stack(
           children: [
             /// Microscope Image
             Positioned.fill(
               child: ImageViewer(
-                imagePath: controller.slideImage,
+                imagePath: widget.slide.imagePath,
                 transformationController:
                 controller.transformationController,
               ),
             ),
 
             /// Hotspots
-            ...controller.hotspots.map(
-                  (hotspot) => HotspotMarker(
-                hotspot: hotspot,
-                onTap: () => _showHotspotInfo(hotspot),
-              ),
-            ),
-
-            /// Header
-            Positioned(
-              top: 16,
-              left: 16,
-              right: 16,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(.6),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Text(
-                  'Blood Microscopy',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+            IgnorePointer(
+              ignoring: false,
+              child: Stack(
+                children: controller.hotspots
+                    .map(
+                      (hotspot) => HotspotMarker(
+                    hotspot: hotspot,
+                    onTap: () =>
+                        _showHotspotInfo(hotspot),
                   ),
-                ),
+                )
+                    .toList(),
               ),
             ),
 
             /// Zoom Controls
             Positioned(
               right: 16,
-              top: 100,
+              top: 20,
               child: ZoomControls(
                 onZoomIn: controller.zoomIn,
                 onZoomOut: controller.zoomOut,
@@ -102,39 +137,57 @@ class _MicroscopeScreenState extends State<MicroscopeScreen> {
               left: 16,
               right: 16,
               bottom: 24,
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(.7),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceAround,
-                  children: [
-                    _actionButton(
-                      icon: Icons.note_alt_outlined,
-                      label: "Hotspot Notes",
-                      onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/hotspot-info',
-                        );
-                      },
-                    ),
+              child: SizedBox(
+                height: 90,
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(.7),
+                    borderRadius:
+                    BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    mainAxisAlignment:
+                    MainAxisAlignment.spaceAround,
+                    children: [
+                      _actionButton(
+                        icon: Icons.note_alt_outlined,
+                        label: "Hotspot Notes",
+                        onTap: () {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Tap a hotspot marker on the slide to view its information.',
+                              ),
+                            ),
+                          );
+                        },
+                      ),
 
-                    _actionButton(
-                      icon: Icons.quiz_outlined,
-                      label: "Quiz",
-                      onTap: _openQuiz,
-                    ),
+                      _actionButton(
+                        icon: Icons.quiz,
+                        label: "Quiz",
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => QuizScreen(
+                                slideId:
+                                widget.slide.id,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
 
-                    _actionButton(
-                      icon: Icons.smart_toy_outlined,
-                      label: "Ask AI",
-                      onTap: _openAITutor,
-                    ),
-                  ],
+                      _actionButton(
+                        icon: Icons.smart_toy_outlined,
+                        label: "Ask AI",
+                        onTap: _openAITutor,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -162,14 +215,14 @@ class _MicroscopeScreenState extends State<MicroscopeScreen> {
           children: [
             Icon(
               icon,
-              color: Colors.white,
+              color: Colors.lightGreenAccent,
               size: 28,
             ),
             const SizedBox(height: 4),
             Text(
               label,
               style: const TextStyle(
-                color: Colors.white,
+                color: Colors.greenAccent,
                 fontSize: 12,
               ),
             ),

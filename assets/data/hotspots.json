@@ -1,0 +1,91 @@
+[
+  {
+    "slideId": "slide_001",
+    "hotspots": [
+      {
+        "id": "h1",
+        "title": "Nucleus",
+        "x": 0.50,
+        "y": 0.40,
+        "description": "The nucleus is the control center of the cell. It contains the genetic material (DNA) and directs all cell activities."
+      },
+      {
+        "id": "h2",
+        "title": "Nucleolus",
+        "x": 0.51,
+        "y": 0.46,
+        "description": "The nucleolus is found inside the nucleus and is responsible for producing ribosomes."
+      },
+      {
+        "id": "h3",
+        "title": "Nuclear Membrane",
+        "x": 0.58,
+        "y": 0.38,
+        "description": "The nuclear membrane surrounds the nucleus and controls what enters and leaves it."
+      },
+      {
+        "id": "h4",
+        "title": "Cytoplasm",
+        "x": 0.35,
+        "y": 0.60,
+        "description": "The cytoplasm is the jelly-like substance where organelles are suspended and cellular reactions occur."
+      },
+      {
+        "id": "h5",
+        "title": "Cell Membrane",
+        "x": 0.84,
+        "y": 0.50,
+        "description": "The cell membrane surrounds the cell and regulates the movement of substances in and out."
+      },
+      {
+        "id": "h6",
+        "title": "Mitochondrion",
+        "x": 0.23,
+        "y": 0.53,
+        "description": "Mitochondria produce energy through cellular respiration and are often called the powerhouse of the cell."
+      },
+      {
+        "id": "h7",
+        "title": "Golgi Apparatus",
+        "x": 0.65,
+        "y": 0.70,
+        "description": "The Golgi apparatus modifies, packages, and transports proteins and other substances."
+      },
+      {
+        "id": "h8",
+        "title": "Rough Endoplasmic Reticulum",
+        "x": 0.42,
+        "y": 0.26,
+        "description": "The rough endoplasmic reticulum is covered with ribosomes and helps produce proteins."
+      },
+      {
+        "id": "h9",
+        "title": "Smooth Endoplasmic Reticulum",
+        "x": 0.72,
+        "y": 0.30,
+        "description": "The smooth endoplasmic reticulum synthesizes lipids and helps detoxify harmful substances."
+      },
+      {
+        "id": "h10",
+        "title": "Vesicle",
+        "x": 0.77,
+        "y": 0.52,
+        "description": "Vesicles are small membrane-bound sacs used to transport materials within the cell."
+      },
+      {
+        "id": "h11",
+        "title": "Lysosome",
+        "x": 0.31,
+        "y": 0.72,
+        "description": "Lysosomes contain enzymes that break down waste materials and worn-out cell parts."
+      },
+      {
+        "id": "h12",
+        "title": "Ribosomes",
+        "x": 0.61,
+        "y": 0.22,
+        "description": "Ribosomes are tiny structures responsible for protein synthesis."
+      }
+    ]
+  }
+]

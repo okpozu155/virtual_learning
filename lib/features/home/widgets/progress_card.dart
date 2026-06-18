@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 
 class ProgressCard extends StatelessWidget {
-  const ProgressCard({super.key});
+  final double progress;
+
+  const ProgressCard({
+    super.key,
+    required this.progress,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final percentage = (progress * 100).toInt();
+
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
@@ -12,21 +19,25 @@ class ProgressCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
-          children: const [
-            Text(
+          children: [
+            const Text(
               "Overall Progress",
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 15),
+
+            const SizedBox(height: 15),
+
             LinearProgressIndicator(
-              value: 0.75,
+              value: progress,
               minHeight: 10,
             ),
-            SizedBox(height: 10),
-            Text("75% Completed"),
+
+            const SizedBox(height: 10),
+
+            Text("$percentage% Completed"),
           ],
         ),
       ),

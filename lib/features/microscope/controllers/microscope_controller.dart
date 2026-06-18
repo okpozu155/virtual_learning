@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../data/models/hotspot_model.dart';
+
+
 class MicroscopeController {
   final TransformationController transformationController =
   TransformationController();
@@ -7,7 +10,7 @@ class MicroscopeController {
   String slideImage =
       'assets/images/slides/blood_smear.jpg';
 
-  List<dynamic> hotspots = [];
+  List<HotspotModel> hotspots = [];
 
   void zoomIn() {
     transformationController.value =

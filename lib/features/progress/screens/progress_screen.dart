@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../controllers/progress_controller.dart';
-import '../widgets/progress_card.dart';
-import '../widgets/achievement_tile.dart';
-import '../widgets/progress_header.dart';
+
+
+
+
 import '../../../data/models/progress_model.dart';
 import '../../../data/repositories/progress_repository.dart';
 import '../../authentication/controllers/auth_controller.dart';

@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'lib/assets/images/microscope.png',
+              'assets/images/microscope.png',
               height: 240,
             ),
             const SizedBox(height: 40),

@@ -40,3 +40,20 @@ class ComingSoonPage extends StatelessWidget {
     );
   }
 }
+
+
+
+
+/*
+    - lib/assets/images/slides/
+    - lib/assets/images/slides/animal_cell.png
+    - lib/assets/images/slides/blood_smear.png
+    - lib/assets/images/slides/plant_leaf.png
+    - lib/assets/images/slides/plant_cell.png
+    - lib/assets/images/slides/plant_tissues.png
+    - lib/assets/images/slides/human_16_cell_embryo.png
+    - lib/assets/images/slides/mouth_epithelia_cells.png
+    - lib/assets/images/slides/paramecium.png
+    - lib/assets/images/slides/onion_epithelia_cells.png
+    - lib/assets/images/slides/prepared_slide_sample.png
+ */

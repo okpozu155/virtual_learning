@@ -1,0 +1,343 @@
+[
+  {
+    "slideId": "slide_001",
+    "title": "Animal Cell Quiz",
+    "questions": [
+      {
+        "question": "What is the control center of the animal cell?",
+        "options": ["Nucleus", "Cell membrane", "Cytoplasm", "Ribosome"],
+        "correctAnswer": 0
+      },
+      {
+        "question": "Which structure contains the genetic material?",
+        "options": ["Mitochondria", "Nucleus", "Golgi body", "Vacuole"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "What is the jelly-like substance inside the cell called?",
+        "options": ["Cell wall", "Membrane", "Nucleolus", "Cytoplasm"],
+        "correctAnswer": 3
+      },
+      {
+        "question": "Animal cells do NOT have which structure?",
+        "options": ["Cell membrane", "Nucleus", "Cell wall", "Cytoplasm"],
+        "correctAnswer": 2
+      },
+      {
+        "question": "Which organelle produces energy for the cell?",
+        "options": ["Mitochondria", "Ribosome", "Nucleus", "Lysosome"],
+        "correctAnswer": 0
+      }
+    ]
+  },
+  {
+    "slideId": "slide_002",
+    "title": "Blood Smear Quiz",
+    "questions": [
+      {
+        "question": "What is the primary function of red blood cells?",
+        "options": ["Fight infection", "Carry oxygen", "Clot blood", "Digest food"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "Which blood cells help fight infections?",
+        "options": ["Red blood cells", "Platelets", "White blood cells", "Plasma"],
+        "correctAnswer": 2
+      },
+      {
+        "question": "What component helps blood clot?",
+        "options": ["Plasma", "Platelets", "White cells","Red cells"],
+        "correctAnswer": 3
+      },
+      {
+        "question": "Blood is classified as what type of tissue?",
+        "options": ["Muscle", "Connective", "Nervous", "Epithelial"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "Which component transports nutrients and waste?",
+        "options": ["Plasma", "Platelets", "White cells", "Red cells"],
+        "correctAnswer": 0
+      }
+    ]
+  },
+  {
+    "slideId": "slide_003",
+    "title": "Cell Division Quiz",
+    "questions": [
+      {
+        "question": "What is the process by which one cell divides into two identical cells?",
+        "options": ["Photosynthesis", "Respiration", "Diffusion",  "Mitosis"],
+        "correctAnswer": 3
+      },
+      {
+        "question": "Why do cells divide?",
+        "options": ["To make food", "For growth and repair", "To absorb water", "To produce oxygen"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "What happens to DNA before cell division?",
+        "options": ["It disappears", "It shrinks", "It hardens", "It replicates"],
+        "correctAnswer": 3
+      },
+      {
+        "question": "How many daughter cells result from mitosis?",
+        "options": ["1", "2", "3", "4"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "Mitosis produces daughter cells that are:",
+        "options": ["Different", "Mutated", "Identical", "Dead"],
+        "correctAnswer": 2
+      }
+    ]
+  },
+  {
+    "slideId": "slide_004",
+    "title": "Human Embryo Quiz",
+    "questions": [
+      {
+        "question": "The 16-cell embryo stage occurs after repeated:",
+        "options": ["Cell divisions", "Photosynthesis", "Digestion", "Respiration"],
+        "correctAnswer": 0
+      },
+      {
+        "question": "What develops from an embryo?",
+        "options": ["A complete organism", "A single organ", "A tissue only", "A cell wall"],
+        "correctAnswer": 2
+      },
+      {
+        "question": "Embryonic cells are initially:",
+        "options": ["Specialized", "Identical", "Dead", "Empty"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "Which process increases cell number in the embryo?",
+        "options": ["Diffusion", "Respiration", "Osmosis", "Mitosis"],
+        "correctAnswer": 3
+      },
+      {
+        "question": "Embryonic development begins after:",
+        "options": ["Birth", "Fertilization", "Photosynthesis", "Exercise"],
+        "correctAnswer": 1
+      }
+    ]
+  },
+  {
+    "slideId": "slide_005",
+    "title": "Mouth Epithelial Cells Quiz",
+    "questions": [
+      {
+        "question": "Mouth epithelial cells are found in the:",
+        "options": ["Heart", "Mouth lining", "Lungs", "Bones"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "What is the main function of epithelial tissue?",
+        "options": ["Movement", "Digestion", "Thinking", "Protection"],
+        "correctAnswer": 3
+      },
+      {
+        "question": "Mouth epithelial cells are examples of:",
+        "options": ["Plant cells", "Animal cells", "Bacteria", "Fungi"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "Which structure surrounds these cells?",
+        "options": ["Cell wall",  "Capsule", "Shell","Cell membrane"],
+        "correctAnswer": 3
+      },
+      {
+        "question": "These cells help protect against:",
+        "options": ["Physical damage", "Gravity", "Sunlight", "Magnetism"],
+        "correctAnswer": 0
+      }
+    ]
+  },
+  {
+    "slideId": "slide_006",
+    "title": "Onion Epithelial Cells Quiz",
+    "questions": [
+      {
+        "question": "Onion cells are examples of:",
+        "options": ["Animal cells", "Plant cells", "Bacterial cells", "Blood cells"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "Which structure is clearly visible in onion cells?",
+        "options": ["Cell wall", "Bone", "Muscle", "Platelet"],
+        "correctAnswer": 0
+      },
+      {
+        "question": "What gives plant cells their rigid shape?",
+        "options": ["Nucleus",  "Ribosome", "Mitochondria", "Cell wall"],
+        "correctAnswer": 3
+      },
+      {
+        "question": "Onion epidermis is commonly used because cells are:",
+        "options": ["Large and clear", "Invisible", "Moving", "Dead"],
+        "correctAnswer": 0
+      },
+      {
+        "question": "Plant cells contain a large:",
+        "options": ["Platelet", "Axon",  "Vacuole", "Neuron"],
+        "correctAnswer": 2
+      }
+    ]
+  },
+  {
+    "slideId": "slide_007",
+    "title": "Paramecium Quiz",
+    "questions": [
+      {
+        "question": "Paramecium is a:",
+        "options": ["Multicellular animal", "Single-celled organism", "Plant", "Fungus"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "Paramecium moves using:",
+        "options": ["Legs", "Wings", "Cilia", "Roots"],
+        "correctAnswer": 2
+      },
+      {
+        "question": "Paramecium is usually found in:",
+        "options": ["Deserts", "Mountains", "Air","Freshwater"],
+        "correctAnswer": 3
+      },
+      {
+        "question": "Paramecium belongs to which group?",
+        "options": ["Protists", "Birds", "Plants", "Mammals"],
+        "correctAnswer": 0
+      },
+      {
+        "question": "Paramecium obtains food by:",
+        "options": ["Photosynthesis", "Feeding on microorganisms", "Breathing", "Drinking"],
+        "correctAnswer": 1
+      }
+    ]
+  },
+  {
+    "slideId": "slide_008",
+    "title": "Plant Cell Quiz",
+    "questions": [
+      {
+        "question": "Which organelle performs photosynthesis?",
+        "options": ["Chloroplast", "Nucleus", "Mitochondria", "Ribosome"],
+        "correctAnswer": 0
+      },
+      {
+        "question": "Plant cells have a rigid:",
+        "options": [ "Skeleton", "Capsule", "Cell wall", "Membrane only"],
+        "correctAnswer": 2
+      },
+      {
+        "question": "What pigment gives plants their green color?",
+        "options": ["Hemoglobin", "Melanin", "Chlorophyll", "Keratin"],
+        "correctAnswer": 2
+      },
+      {
+        "question": "Plant cells store water in a large:",
+        "options": ["Nucleus", "Vacuole", "Ribosome", "Golgi body"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "Photosynthesis produces:",
+        "options": ["Food and oxygen", "Carbon dioxide", "Nitrogen", "Blood"],
+        "correctAnswer": 0
+      }
+    ]
+  },
+  {
+    "slideId": "slide_009",
+    "title": "Plant Leaf Quiz",
+    "questions": [
+      {
+        "question": "Leaves are the main site of:",
+        "options": ["Photosynthesis", "Digestion", "Hearing", "Movement"],
+        "correctAnswer": 0
+      },
+      {
+        "question": "Which gas enters the leaf during photosynthesis?",
+        "options": ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "Tiny openings on leaves are called:",
+        "options": ["Roots", "Stomata", "Veins", "Petals"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "Leaves contain many:",
+        "options": [ "Bones", "Neurons", "Platelets","Chloroplasts"],
+        "correctAnswer": 3
+      },
+      {
+        "question": "Photosynthesis uses sunlight to produce:",
+        "options": ["Food", "Metal", "Protein only", "Soil"],
+        "correctAnswer": 0
+      }
+    ]
+  },
+  {
+    "slideId": "slide_010",
+    "title": "Plant Tissue Quiz",
+    "questions": [
+      {
+        "question": "A tissue is a group of:",
+        "options": [ "Organs", "Organisms", "Cells", "Atoms"],
+        "correctAnswer": 2
+      },
+      {
+        "question": "Plant tissues help with:",
+        "options": ["Support and transport", "Flying", "Swimming", "Speaking"],
+        "correctAnswer": 0
+      },
+      {
+        "question": "Xylem transports:",
+        "options": ["Oxygen", "Blood", "Hormones", "Water"],
+        "correctAnswer": 3
+      },
+      {
+        "question": "Phloem transports:",
+        "options": [ "Water only","Food", "Air", "Minerals only"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "Plant tissues are made of specialized:",
+        "options": ["Cells", "Bones", "Muscles", "Nerves"],
+        "correctAnswer": 0
+      }
+    ]
+  },
+  {
+    "slideId": "slide_011",
+    "title": "Prepared Slide Sample Quiz",
+    "questions": [
+      {
+        "question": "What is a prepared slide used for?",
+        "options": ["Microscopic observation", "Cooking", "Painting", "Writing"],
+        "correctAnswer": 0
+      },
+      {
+        "question": "A specimen is mounted on:",
+        "options": ["Wood", "Glass slide", "Plastic bag", "Paper"],
+        "correctAnswer": 1
+      },
+      {
+        "question": "Prepared slides help students:",
+        "options": ["Run faster", "Grow plants", "Measure temperature","Observe specimens clearly"],
+        "correctAnswer": 3
+      },
+      {
+        "question": "Which instrument is used with prepared slides?",
+        "options": [ "Telescope", "Thermometer","Microscope", "Compass"],
+        "correctAnswer": 2
+      },
+      {
+        "question": "Prepared slides make observations:",
+        "options": ["Easier and safer", "Harder", "Impossible", "Slower"],
+        "correctAnswer": 0
+      }
+    ]
+  }
+]
