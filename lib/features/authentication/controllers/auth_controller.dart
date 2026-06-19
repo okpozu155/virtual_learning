@@ -65,23 +65,21 @@ class AuthController extends ChangeNotifier {
     }
   }
 
-  // Password Recovery Matrix Processor
-  Future<String?> forgotPassword(String email) async {
+  // Password Recovery Matrix Processor - 🎯 UPDATED TO RETURN BOOL
+  Future<bool> forgotPassword(String email) async {
     _resetState();
     try {
-      //FIXED: Directly await the void method instead of saving it into a variable
       await _authRepository.recoverPassword(email);
       
       _isLoading = false;
       notifyListeners();
       
-      //FIXED: Return an explicit confirmation message back to your UI layer
-      return "Password reset link sent! Check your inbox.";
+      return true; // 🎯 Success! Returns true to make 'if (success)' work flawlessly
     } catch (e) {
       _isLoading = false;
       _errorMessage = e.toString().replaceAll("Exception: ", "");
       notifyListeners();
-      return null;
+      return false; // 🎯 Something broke, returns false
     }
   }
 }

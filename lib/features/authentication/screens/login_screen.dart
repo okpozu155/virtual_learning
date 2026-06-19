@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> _handleForgotPassword() async {
+Future<void> _handleForgotPassword() async {
     final dialogEmailController = TextEditingController(text: emailController.text);
     
     showDialog(
@@ -80,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text("Enter your account email below to lookup simulated profile registry credentials."),
+              const Text("Enter your account email below. We will send a secure password reset link to your inbox."),
               const SizedBox(height: 16),
               TextField(
                 controller: dialogEmailController,
@@ -103,35 +103,32 @@ class _LoginScreenState extends State<LoginScreen> {
                 final targetEmail = dialogEmailController.text.trim();
                 if (targetEmail.isEmpty) return;
                 
-                Navigator.pop(context); 
-                final recoveredPassword = await _authController.forgotPassword(targetEmail);
+                Navigator.pop(context); // Close input dialog
+                
+                // Trigger the real Firebase email blast
+                final success = await _authController.forgotPassword(targetEmail);
                 
                 if (!mounted) return;
                 
-                if (recoveredPassword != null) {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text("Account Matched"),
-                      content: Text("Simulated profile verification complete!\n\nYour stored account password: $recoveredPassword"),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text("Done"),
-                        )
-                      ],
+                if (success) {
+                  // Show clean success banner
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Password reset link sent! Check your inbox."),
+                      backgroundColor: Colors.green,
                     ),
                   );
                 } else {
+                  // Show error if email doesn't exist or network failed
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(_authController.errorMessage ?? "Error recovering profile data"),
+                      content: Text(_authController.errorMessage ?? "Error sending reset link"),
                       backgroundColor: Colors.red,
                     ),
                   );
                 }
               },
-              child: const Text("Recover"),
+              child: const Text("Send Link"),
             ),
           ],
         );
