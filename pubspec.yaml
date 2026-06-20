@@ -36,12 +36,29 @@ dependencies:
   path_provider:
   shared_preferences:
   hive:
+<<<<<<< HEAD
   cached_network_image:
   photo_view:
   image_picker:
   flutter_chat_ui:
   flutter_markdown:
   lottie:
+=======
+  cached_network_image: ^3.3.1
+  photo_view:
+  image_picker:
+  flutter_chat_ui:
+  flutter_markdown_plus:
+  lottie:
+  firebase_core:
+  firebase_auth:
+  cloud_firestore:
+  package_config: ^2.2.0
+  firebase_storage: ^12.4.10
+  diffutil_dart: ^4.0.1
+  http: ^0.13.6
+  
+>>>>>>> okpozu_branch
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -51,6 +68,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -63,8 +81,12 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
-flutter:
+flutter: { assets: [ assets/images/microscope.png, assets/images/slides/,
+                     assets/data/slides.json, assets/data/quizzes.json,
+                     assets/data/hotspots.json ], uses-material-design: true,
+           shaders: [    ], fonts: [    ], generate: false }
 
+<<<<<<< HEAD
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -101,3 +123,5 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
 
+=======
+>>>>>>> okpozu_branch

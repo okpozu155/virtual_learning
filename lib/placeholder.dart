@@ -1,0 +1,60 @@
+import 'package:flutter/material.dart';
+
+class ComingSoonPage extends StatelessWidget {
+  const ComingSoonPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Coming Soon'),
+      ),
+      body: Center(
+        child: Container(
+          width: 300,
+          height: 450,
+          decoration: BoxDecoration(
+            color: Colors.blue.shade300,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 8,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
+          child: const Center(
+            child: Text(
+              'COMING SOON...',
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                letterSpacing: 2,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+//bucket reference
+// gs://
+// virtual-learning-7fb6c.firebasestorage.app
+
+/*
+    - lib/assets/images/slides/
+    - lib/assets/images/slides/animal_cell.png
+    - lib/assets/images/slides/blood_smear.png
+    - lib/assets/images/slides/plant_leaf.png
+    - lib/assets/images/slides/plant_cell.png
+    - lib/assets/images/slides/plant_tissues.png
+    - lib/assets/images/slides/human_16_cell_embryo.png
+    - lib/assets/images/slides/mouth_epithelia_cells.png
+    - lib/assets/images/slides/paramecium.png
+    - lib/assets/images/slides/onion_epithelia_cells.png
+    - lib/assets/images/slides/prepared_slide_sample.png
+ */
