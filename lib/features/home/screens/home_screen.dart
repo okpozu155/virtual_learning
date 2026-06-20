@@ -7,7 +7,7 @@ import '../widgets/quick_action_card.dart';
 import '../../slide_library/screens/library_screen.dart';
 import '../../microscope/screens/microscope_screen.dart';
 import '../../quiz/screens/quiz_screen.dart';
-
+import '../../../core/routes/app_routes.dart';
 import '../../../core/services/local_storage_service.dart';
 import '../../../data/repositories/slide_repository.dart';
 import '../../../data/models/slide_model.dart';
@@ -142,7 +142,11 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
-            onPressed: () {},
+            onPressed: () {Navigator.pushNamed(
+              context,
+              AppRoutes.adminDashboard,
+            );
+              },
           ),
         ],
       ),
@@ -318,7 +322,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: "Profile",
+            label: "profile",
           ),
         ],
       ),

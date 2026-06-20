@@ -1,36 +1,38 @@
-import 'dart:convert';
-
-import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/slide_model.dart';
 
 class SlideRepository {
+  final FirebaseFirestore firestore =
+      FirebaseFirestore.instance;
+
   Future<List<SlideModel>> getSlides() async {
-    final jsonString = await rootBundle.loadString(
-      'assets/data/slides.json',
-    );
+    final snapshot =
+    await firestore
+        .collection('slides')
+        .get();
 
-    final List<dynamic> data =
-    json.decode(jsonString);
-
-    return data
-        .map(
-          (e) => SlideModel.fromJson(e),
-    )
-        .toList();
+    return snapshot.docs.map((doc) {
+      return SlideModel.fromJson({
+        'id': doc.id,
+        ...doc.data(),
+      });
+    }).toList();
   }
 
   Future<SlideModel?> getSlideById(
-      String id,
-      ) async {
-    final slides = await getSlides();
+      String slideId) async {
+    final doc =
+    await firestore
+        .collection('slides')
+        .doc(slideId)
+        .get();
 
-    try {
-      return slides.firstWhere(
-            (slide) => slide.id == id,
-      );
-    } catch (_) {
-      return null;
-    }
+    if (!doc.exists) return null;
+
+    return SlideModel.fromJson({
+      'id': doc.id,
+      ...doc.data()!,
+    });
   }
 }

@@ -41,8 +41,9 @@ class ComingSoonPage extends StatelessWidget {
   }
 }
 
-
-
+//bucket reference
+// gs://
+// virtual-learning-7fb6c.firebasestorage.app
 
 /*
     - lib/assets/images/slides/

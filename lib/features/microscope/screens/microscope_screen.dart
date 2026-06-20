@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import '../controllers/microscope_controller.dart';
-import '../widgets/image_viewer.dart';
-import '../widgets/hotspot_marker.dart';
+
 import '../widgets/zoom_controls.dart';
 import '../../../features/quiz/screens/quiz_screen.dart';
 import '../../../data/models/slide_model.dart';
 import '../../../data/models/hotspot_model.dart';
 import '../../../data/repositories/hotspot_repository.dart';
+import '../widgets/slide_canvas.dart';
+
 
 class MicroscopeScreen extends StatefulWidget {
   final SlideModel slide;
@@ -31,6 +32,7 @@ class _MicroscopeScreenState extends State<MicroscopeScreen> {
     super.initState();
     loadHotspots();
   }
+
 
   Future<void> loadHotspots() async {
     controller.hotspots =
@@ -64,10 +66,17 @@ class _MicroscopeScreenState extends State<MicroscopeScreen> {
     );
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+
     debugPrint(
-      "Hotspot count: ${controller.hotspots.length}",
+      "Slide ID = ${widget.slide.id}",
+    );
+
+    debugPrint(
+      "Slide title = ${widget.slide.title}",
     );
 
     return Scaffold(
@@ -98,26 +107,13 @@ class _MicroscopeScreenState extends State<MicroscopeScreen> {
           children: [
             /// Microscope Image
             Positioned.fill(
-              child: ImageViewer(
-                imagePath: widget.slide.imagePath,
+              child: SlideCanvas(
+                imagePath: widget.slide.imageUrl,
                 transformationController:
                 controller.transformationController,
-              ),
-            ),
-
-            /// Hotspots
-            IgnorePointer(
-              ignoring: false,
-              child: Stack(
-                children: controller.hotspots
-                    .map(
-                      (hotspot) => HotspotMarker(
-                    hotspot: hotspot,
-                    onTap: () =>
-                        _showHotspotInfo(hotspot),
-                  ),
-                )
-                    .toList(),
+                hotspots: controller.hotspots
+                    .cast<HotspotModel>(),
+                onHotspotTap: _showHotspotInfo,
               ),
             ),
 
@@ -169,12 +165,16 @@ class _MicroscopeScreenState extends State<MicroscopeScreen> {
                         icon: Icons.quiz,
                         label: "Quiz",
                         onTap: () {
+
+                          print(
+                            "Opening quiz for slide: ${widget.slide.id}",
+                          );
+
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (_) => QuizScreen(
-                                slideId:
-                                widget.slide.id,
+                                slideId: widget.slide.id,
                               ),
                             ),
                           );

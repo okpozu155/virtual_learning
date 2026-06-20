@@ -220,8 +220,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
                               10,
                             ),
                             child:
-                            Image.asset(
-                              slide.imagePath,
+                            Image.network(
+                              slide.imageUrl,
                               width:
                               90,
                               height:

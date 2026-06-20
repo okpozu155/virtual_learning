@@ -19,16 +19,21 @@ class QuizRepository {
     )
         .toList();
   }
-  Future<QuizModel?> getQuizBySlideId(
-      String slideId) async {
+  Future<QuizModel?> getQuizBySlideId(String slideId) async {
     final quizzes = await getQuizzes();
+
+    print("Looking for quiz with slideId: $slideId");
+
+    for (final quiz in quizzes) {
+      print("Quiz found: ${quiz.slideId}");
+    }
 
     try {
       return quizzes.firstWhere(
             (quiz) => quiz.slideId == slideId,
       );
     } catch (_) {
+      print("NO MATCH FOUND");
       return null;
     }
-  }
-}
+  }}

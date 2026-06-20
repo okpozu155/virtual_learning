@@ -12,7 +12,12 @@
           "package_name": "com.example.virtual_learning"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "440708813081-peaub00crjr90bm7579v8quulor7d4h5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCGnJJ_MPUIPxOEVb7fMl586FwPu30r9GU"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "440708813081-peaub00crjr90bm7579v8quulor7d4h5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
