@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '/features/admin/screens/slide_management_screen.dart';
 
-import 'package:virtual_learning/features/admin/screens/slide_management_screen.dart';
-import 'package:virtual_learning/features/admin/screens/annotation_editor_screen.dart';
-import 'package:virtual_learning/features/admin/screens/hotspot_list_screen.dart';
-import 'package:virtual_learning/features/admin/screens/quiz_management_screen.dart';
-import 'package:virtual_learning/features/admin/screens/analytics_screen.dart';
+import '/features/admin/screens/quiz_management_screen.dart';
+import '/features/admin/screens/analytics_screen.dart';
 
+import '../../../message/admin_inbox_screen.dart';
+import '../../../message/admin_bulletin_screen.dart';
 
 
 class AdminDashboardScreen extends StatelessWidget {
@@ -19,26 +19,31 @@ class AdminDashboardScreen extends StatelessWidget {
         'title': 'Upload Slide',
         'icon': Icons.upload_file,
         'route': '/slide-management',
-      },
-      {
-        'title': 'Annotate Slide',
-        'icon': Icons.edit_location_alt,
-        'route': '/annotation-editor',
-      },
-      {
-        'title': 'Manage Hotspots',
-        'icon': Icons.place,
-        'route': '/hotspot-list',
+        'color': Colors.cyanAccent,
       },
       {
         'title': 'Manage Quizzes',
         'icon': Icons.quiz,
         'route': '/quiz-management',
+        'color': Colors.cyanAccent,
       },
       {
         'title': 'Analytics',
         'icon': Icons.bar_chart,
         'route': '/analytics',
+        'color': Colors.cyanAccent,
+      },
+      {
+        'title': 'Inbox',
+        'icon': Icons.mail,
+        'route': '/inbox',
+        'color': Colors.blue,
+      },
+      {
+        'title': 'Bulletins',
+        'icon': Icons.campaign,
+        'route': '/bulletins',
+        'color': Colors.orange,
       },
     ];
 
@@ -90,20 +95,20 @@ class AdminDashboardScreen extends StatelessWidget {
                     );
                     break;
 
-                  case 'Annotate Slide':
+                  case 'Inbox':
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => const SlideManagementScreen(),
+                        builder: (_) => const AdminInboxScreen(),
                       ),
                     );
                     break;
 
-                  case 'Manage Hotspots':
+                  case 'Bulletins':
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => const SlideManagementScreen(),
+                        builder: (_) => const AdminBulletinScreen(),
                       ),
                     );
                     break;
@@ -111,7 +116,7 @@ class AdminDashboardScreen extends StatelessWidget {
               },
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.cyanAccent,
+                  color: item['color'],
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Column(
@@ -125,6 +130,9 @@ class AdminDashboardScreen extends StatelessWidget {
                     Text(
                       item['title'],
                       textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
@@ -136,3 +144,4 @@ class AdminDashboardScreen extends StatelessWidget {
     );
   }
 }
+

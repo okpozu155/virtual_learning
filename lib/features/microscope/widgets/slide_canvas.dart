@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import '../../../data/models/hotspot_model.dart';
 
@@ -28,10 +30,15 @@ class SlideCanvas extends StatelessWidget {
           return Stack(
             children: [
               Positioned.fill(
-                child: Image.network(
+                child: imagePath.startsWith('http')
+                    ? Image.network(
                   imagePath,
                   fit: BoxFit.contain,
-                ),
+                )
+                    : Image.file(
+                  File(imagePath),
+                  fit: BoxFit.contain,
+                )
               ),
 
               ...hotspots.map(

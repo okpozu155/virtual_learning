@@ -9,6 +9,7 @@ import '../../features/home/screens/home_screen.dart';
 import '../../features/profile/screens/profile_screen.dart';
 import '../../features/progress/screens/progress_screen.dart';
 import '../../features/slide_library/screens/library_screen.dart';
+import '../../features/authentication/screens/authentication_guard_screen.dart';
 
 import '../../features/hotspot_notes/screens/hotspot_info_screen.dart';
 
@@ -59,7 +60,7 @@ class AppRoutes {
     hotspotInfo: (context) => const HotspotInfoScreen(),
 
     adminDashboard: (context) =>
-    const AdminDashboardScreen(),
+    const AdminDashboardScreen(),  // AdminGuard(),
 
     slideManagement: (context) =>
     const SlideManagementScreen(),

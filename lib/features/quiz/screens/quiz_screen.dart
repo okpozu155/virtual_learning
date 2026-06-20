@@ -4,6 +4,7 @@ import '../../../data/models/quiz_model.dart';
 import '../../../data/models/question_model.dart';
 import '../../../data/repositories/quiz_repository.dart';
 import '../../../core/services/progress_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
 class QuizScreen extends StatefulWidget {
