@@ -1,0 +1,61 @@
+[
+    {
+        "slideId": "plant_cell_001",
+        "annotations": [
+            {
+                "id": "anno_001",
+                "type": "polygon",
+                "label": "Vacuole Area",
+                "color": "#33A8FF",
+                "description": "A large fluid-filled vesicle occupying most of the central space in a mature plant cell.",
+                "points": [
+                    {
+                        "x": 40.0,
+                        "y": 30.0
+                    },
+                    {
+                        "x": 60.0,
+                        "y": 32.0
+                    },
+                    {
+                        "x": 65.0,
+                        "y": 55.0
+                    },
+                    {
+                        "x": 38.0,
+                        "y": 50.0
+                    }
+                ]
+            },
+            {
+                "id": "anno_002",
+                "type": "polyline",
+                "label": "Outer Cell Wall Trace",
+                "color": "#2ECC71",
+                "description": "The rigid external layer providing structural support and protection.",
+                "points": [
+                    {
+                        "x": 5.0,
+                        "y": 5.0
+                    },
+                    {
+                        "x": 95.0,
+                        "y": 5.0
+                    },
+                    {
+                        "x": 95.0,
+                        "y": 95.0
+                    },
+                    {
+                        "x": 5.0,
+                        "y": 95.0
+                    },
+                    {
+                        "x": 5.0,
+                        "y": 5.0
+                    }
+                ]
+            }
+        ]
+    }
+]
