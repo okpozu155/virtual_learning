@@ -237,32 +237,74 @@ class _LibraryScreenState extends State<LibraryScreen> {
                                 Image.network(
                                   slide.imageUrl,
                                   width: 90,
-                                  height:
-                                  90,
-                                  fit: BoxFit
-                                      .cover,
-                                  errorBuilder:
-                                      (
+                                  height: 90,
+                                  fit: BoxFit.cover,
+
+                                  loadingBuilder: (
+                                      context,
+                                      child,
+                                      loadingProgress,
+                                      ) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    }
+
+                                    return SizedBox(
+                                      width: 90,
+                                      height: 90,
+                                      child: Center(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          children: const [
+                                            SizedBox(
+                                              width: 14,
+                                              height: 14,
+                                              child:
+                                              CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                              ),
+                                            ),
+                                            SizedBox(width: 4),
+                                            SizedBox(
+                                              width: 14,
+                                              height: 14,
+                                              child:
+                                              CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                              ),
+                                            ),
+                                            SizedBox(width: 4),
+                                            SizedBox(
+                                              width: 14,
+                                              height: 14,
+                                              child:
+                                              CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+
+                                  errorBuilder: (
                                       context,
                                       error,
                                       stackTrace,
                                       ) {
                                     return Container(
-                                      width:
-                                      90,
-                                      height:
-                                      90,
-                                      color: Colors
-                                          .grey
-                                          .shade300,
-                                      child:
-                                      const Icon(
-                                        Icons
-                                            .image,
+                                      width: 90,
+                                      height: 90,
+                                      color: Colors.grey.shade300,
+                                      child: const Icon(
+                                        Icons.broken_image,
+                                        size: 40,
                                       ),
                                     );
                                   },
-                                ),
+                                )
                               ),
 
                               const SizedBox(
