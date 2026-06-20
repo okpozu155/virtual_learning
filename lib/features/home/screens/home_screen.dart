@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/dashboard_card.dart';
-import '../widgets/progress_card.dart';
-import '../widgets/quick_action_card.dart';
 
+import '../widgets/quick_action_card.dart';
+import '../../../features/profile/screens/student_profile_screen.dart';
+import '../../../features/progress/screens/recent_topics_screen.dart';
+import '../../../message/message_admin_screen.dart';
 import '../../slide_library/screens/library_screen.dart';
 import '../../microscope/screens/microscope_screen.dart';
 import '../../quiz/screens/quiz_screen.dart';
+import '../../../core/services/progress_service.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/services/local_storage_service.dart';
 import '../../../data/repositories/slide_repository.dart';
 import '../../../data/models/slide_model.dart';
-import '../../../core/services/progress_service.dart';
+
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -176,11 +180,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(height: 20),
 
-            ProgressCard(
-              progress: overallProgress,
-            ),
-            const SizedBox(height: 25),
-
             const Text(
               "Quick Access",
               style: TextStyle(
@@ -230,101 +229,74 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(height: 25),
 
-            const Text(
-              "Quick Actions",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-
-            const SizedBox(height: 15),
-
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  QuickActionCard(
-                    title: "Library",
-                    icon: Icons.menu_book,
-                    color: Colors.blue,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const LibraryScreen(),
-                        ),
-                      );
-                    },
-                  ),
-
-                  const SizedBox(width: 12),
-
-                  QuickActionCard(
-                    title: "Microscope",
-                    icon: Icons.biotech,
-                    color: Colors.green,
-                    onTap: openMicroscope,
-                  ),
-
-                  const SizedBox(width: 12),
-
-                  QuickActionCard(
-                    title: "Quiz",
-                    icon: Icons.quiz,
-                    color: Colors.purple,
-                    onTap: () {},
-                  ),
-
-                  const SizedBox(width: 12),
-
-                  QuickActionCard(
-                    title: "Progress",
-                    icon: Icons.bar_chart,
-                    color: Colors.red,
-                    onTap: () {},
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 25),
-
             Card(
               child: ListTile(
                 leading: const Icon(
                   Icons.local_fire_department,
                 ),
                 title: const Text(
-                  "Current Streak",
+                  "Recent Topics",
                 ),
                 subtitle: const Text(
-                  "5 Days",
+                  "Last 7 slides viewed",
                 ),
                 trailing: const Icon(
                   Icons.arrow_forward_ios,
                 ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const RecentTopicsScreen(),
+                    ),
+                  );
+                },
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Home",
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.person),
+                  label: const Text("Profile"),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                        const StudentProfileScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              const SizedBox(width: 12),
+
+              Expanded(
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.message),
+                  label: const Text("Admin"),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                        const MessageAdminScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: "Progress",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "profile",
-          ),
-        ],
+        ),
       ),
     );
   }

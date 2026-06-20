@@ -1,31 +1,44 @@
-class UserModel {
-  final String id;
-  final String name;
-  final String email;
-  final String? photoUrl;
+import 'package:firebase_auth/firebase_auth.dart';
 
-  UserModel({
-    required this.id,
-    required this.name,
+class MyUserModel {
+  final String uid;
+  final String email;
+  final String displayName;
+  final String role;
+  final String photoUrl;
+  final int age;
+
+  MyUserModel({
+    required this.uid,
     required this.email,
-    this.photoUrl,
+    required this.displayName,
+    required this.role,
+    this.photoUrl = '',
+    this.age = 0,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
-      id: json['id'],
-      name: json['name'],
-      email: json['email'],
-      photoUrl: json['photoUrl'],
+  factory MyUserModel.fromFirebase(
+      User firebaseUser,
+      Map<String, dynamic>? extraData,
+      ) {
+    return MyUserModel(
+      uid: firebaseUser.uid,
+      email: firebaseUser.email ?? '',
+      displayName: firebaseUser.displayName ?? 'Anonymous',
+      role: extraData?['role'] ?? 'student',
+      photoUrl: extraData?['photoUrl'] ?? '',
+      age: extraData?['age'] ?? 0,
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'name': name,
+      'uid': uid,
       'email': email,
+      'displayName': displayName,
+      'role': role,
       'photoUrl': photoUrl,
+      'age': age,
     };
   }
 }
