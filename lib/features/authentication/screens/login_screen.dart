@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
+import '../../../core/routes/app_routes.dart';
 import '../widgets/auth_textfield.dart';
 import '../widgets/auth_button.dart';
 import '../controllers/auth_controller.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final AuthController _authController = AuthController();
   
   bool obscurePassword = true;
+
+  // Theme Constants matching the Onboarding flow
+  static const Color slatePrimary = Color(0xFF3B5866);
+  static const Color deepCharcoal = Color(0xFF0F172A);
+  static const Color slateText = Color(0xFF64748B);
+  static const Color premiumBg = Color(0xFFF8FAFC);
 
   Future<void> _handleLogin() async {
     FocusScope.of(context).unfocus();
@@ -36,7 +43,8 @@ class _LoginScreenState extends State<LoginScreen> {
           backgroundColor: Colors.green,
         ),
       );
-      // Optional: Navigator.pushReplacementNamed(context, '/home');
+      // 🛫 Seamlessly forwards user straight into the main dashboard route
+      Navigator.pushReplacementNamed(context, AppRoutes.home);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -56,9 +64,10 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Google Login Successful! Welcome $user"),
-          backgroundColor: Colors.blue,
+          backgroundColor: slatePrimary,
         ),
       );
+      Navigator.pushReplacementNamed(context, AppRoutes.home);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -69,25 +78,43 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-Future<void> _handleForgotPassword() async {
+  Future<void> _handleForgotPassword() async {
     final dialogEmailController = TextEditingController(text: emailController.text);
     
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Reset Password"),
+          backgroundColor: premiumBg,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text(
+            "Reset Password",
+            style: TextStyle(color: deepCharcoal, fontWeight: FontWeight.bold),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text("Enter your account email below. We will send a secure password reset link to your inbox."),
+              const Text(
+                "Enter your account email below. We will send a secure password reset link to your inbox.",
+                style: TextStyle(color: slateText, fontSize: 14, height: 1.3),
+              ),
               const SizedBox(height: 16),
               TextField(
                 controller: dialogEmailController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Email Address",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.email),
+                  labelStyle: const TextStyle(color: slateText),
+                  filled: true,
+                  fillColor: Colors.white,
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: slatePrimary, width: 1.5),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                  ),
+                  prefixIcon: const Icon(Icons.email_outlined, color: slatePrimary),
                 ),
                 keyboardType: TextInputType.emailAddress,
               ),
@@ -96,22 +123,25 @@ Future<void> _handleForgotPassword() async {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
+              child: const Text("Cancel", style: TextStyle(color: slateText, fontWeight: FontWeight.w600)),
             ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: slatePrimary,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                elevation: 0,
+              ),
               onPressed: () async {
                 final targetEmail = dialogEmailController.text.trim();
                 if (targetEmail.isEmpty) return;
                 
-                Navigator.pop(context); // Close input dialog
+                Navigator.pop(context);
                 
-                // Trigger the real Firebase email blast
                 final success = await _authController.forgotPassword(targetEmail);
                 
                 if (!mounted) return;
                 
                 if (success) {
-                  // Show clean success banner
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text("Password reset link sent! Check your inbox."),
@@ -119,7 +149,6 @@ Future<void> _handleForgotPassword() async {
                     ),
                   );
                 } else {
-                  // Show error if email doesn't exist or network failed
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(_authController.errorMessage ?? "Error sending reset link"),
@@ -128,7 +157,7 @@ Future<void> _handleForgotPassword() async {
                   );
                 }
               },
-              child: const Text("Send Link"),
+              child: const Text("Send Link", style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -147,11 +176,11 @@ Future<void> _handleForgotPassword() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: premiumBg,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 24.0),
             child: ListenableBuilder(
               listenable: _authController,
               builder: (context, child) {
@@ -162,12 +191,36 @@ Future<void> _handleForgotPassword() async {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.biotech, size: 80, color: Colors.blue),
-                      const SizedBox(height: 16),
-                      const Text("Welcome Back", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                      // Branding Icon Container with Studio Glow
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: slatePrimary.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.biotech_rounded,
+                          size: 48,
+                          color: slatePrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      
+                      const Text(
+                        "Welcome Back",
+                        style: TextStyle(
+                          fontSize: 32, 
+                          fontWeight: FontWeight.w800, 
+                          color: deepCharcoal,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
                       const SizedBox(height: 8),
-                      const Text("Login to continue learning microbiology", style: TextStyle(color: Colors.grey)),
-                      const SizedBox(height: 40),
+                      const Text(
+                        "Login to continue learning microbiology", 
+                        style: TextStyle(color: slateText, fontSize: 15),
+                      ),
+                      const SizedBox(height: 36),
 
                       AuthTextField(
                         controller: emailController,
@@ -192,7 +245,10 @@ Future<void> _handleForgotPassword() async {
                         textInputAction: TextInputAction.done,
                         onFieldSubmitted: (_) => _handleLogin(),
                         suffixIcon: IconButton(
-                          icon: Icon(obscurePassword ? Icons.visibility_off : Icons.visibility),
+                          icon: Icon(
+                            obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                            color: slateText,
+                          ),
                           onPressed: () => setState(() => obscurePassword = !obscurePassword),
                         ),
                         validator: (value) => value == null || value.length < 6 ? "Minimum 6 characters" : null,
@@ -202,10 +258,14 @@ Future<void> _handleForgotPassword() async {
                         alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: _handleForgotPassword, 
-                          child: const Text("Forgot Password?"),
+                          style: TextButton.styleFrom(foregroundColor: slatePrimary),
+                          child: const Text(
+                            "Forgot Password?", 
+                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 8),
 
                       AuthButton(
                         text: "Login",
@@ -216,26 +276,34 @@ Future<void> _handleForgotPassword() async {
 
                       Row(
                         children: [
-                          Expanded(child: Divider(color: Colors.grey.shade300)),
+                          Expanded(child: Divider(color: const Color(0xFFE2E8F0), thickness: 1)),
                           const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Text("Or continue with", style: TextStyle(color: Colors.grey)),
+                            child: Text("Or continue with", style: TextStyle(color: slateText, fontSize: 14)),
                           ),
-                          Expanded(child: Divider(color: Colors.grey.shade300)),
+                          Expanded(child: Divider(color: const Color(0xFFE2E8F0), thickness: 1)),
                         ],
                       ),
                       const SizedBox(height: 24),
 
                       Center(
-                        child: OutlinedButton.icon(
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            side: BorderSide(color: Colors.grey.shade300),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 54,
+                          child: OutlinedButton.icon(
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                              side: const BorderSide(color: Color(0xFFE2E8F0)),
+                            ),
+                            icon: const Icon(Icons.g_mobiledata, size: 34, color: Colors.red),
+                            label: const Text(
+                              "Sign in with Google", 
+                              style: TextStyle(color: deepCharcoal, fontWeight: FontWeight.w600, fontSize: 15),
+                            ),
+                            onPressed: _handleGoogleLogin,
                           ),
-                          icon: const Icon(Icons.g_mobiledata, size: 30, color: Colors.red),
-                          label: const Text("Sign in with Google", style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w600)),
-                          onPressed: _handleGoogleLogin,
                         ),
                       ),
                       const SizedBox(height: 32),
@@ -243,10 +311,17 @@ Future<void> _handleForgotPassword() async {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text("Don't have an account?"),
+                          const Text(
+                            "Don't have an account?",
+                            style: TextStyle(color: slateText, fontSize: 14),
+                          ),
                           TextButton(
-                            onPressed: () => Navigator.pushNamed(context, '/signup'),
-                            child: const Text("Sign Up"),
+                            onPressed: () => Navigator.pushNamed(context, AppRoutes.signup),
+                            style: TextButton.styleFrom(foregroundColor: slatePrimary),
+                            child: const Text(
+                              "Sign Up", 
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
                           ),
                         ],
                       ),
