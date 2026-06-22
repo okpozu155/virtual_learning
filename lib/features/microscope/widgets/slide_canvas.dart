@@ -1,25 +1,51 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+
 import '../../../data/models/hotspot_model.dart';
 
 class SlideCanvas extends StatelessWidget {
   final String imagePath;
+
   final TransformationController transformationController;
+
   final List<HotspotModel> hotspots;
+
+  final List<Map<String, dynamic>> annotations;
+
   final Function(HotspotModel) onHotspotTap;
+
+  final Function(Map<String, dynamic>) onAnnotationTap;
 
   const SlideCanvas({
     super.key,
     required this.imagePath,
     required this.transformationController,
     required this.hotspots,
+    required this.annotations,
     required this.onHotspotTap,
+    required this.onAnnotationTap,
   });
+
+  Color _hexToColor(String? hex) {
+    if (hex == null || hex.isEmpty) {
+      return Colors.blue;
+    }
+
+    final cleanedHex = hex.replaceAll('#', '');
+
+    return Color(
+      int.parse(
+        'FF$cleanedHex',
+        radix: 16,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    const double iconSize = 30.0; // Defined as a constant to calculate the alignment offset
+    const double hotspotSize = 30;
+    const double annotationSize = 35;
 
     return InteractiveViewer(
       transformationController: transformationController,
@@ -29,6 +55,7 @@ class SlideCanvas extends StatelessWidget {
         builder: (context, constraints) {
           return Stack(
             children: [
+              /// Slide Image
               Positioned.fill(
                 child: imagePath.startsWith('http')
                     ? Image.network(
@@ -38,28 +65,189 @@ class SlideCanvas extends StatelessWidget {
                     : Image.file(
                   File(imagePath),
                   fit: BoxFit.contain,
-                )
+                ),
               ),
 
+              /// Polygon Annotations
+              ...annotations
+                  .where((a) => a['type'] == 'polygon')
+                  .map(
+                    (polygon) {
+                  final points =
+                  (polygon['points'] as List<dynamic>)
+                      .map(
+                        (p) => Offset(
+                      (p['x'] as num).toDouble() *
+                          constraints.maxWidth,
+                      (p['y'] as num).toDouble() *
+                          constraints.maxHeight,
+                    ),
+                  )
+                      .toList();
+
+                  return Positioned.fill(
+                    child: IgnorePointer(
+                      child: CustomPaint(
+                        painter: PolygonPainter(
+                          points: points,
+                          color: _hexToColor(
+                            polygon['color'],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+
+              /// Hotspots
               ...hotspots.map(
                     (hotspot) => Positioned(
-                  // FIXED: Subtract half of the icon size so the icon's exact center aligns with the coordinate
-                  left: (hotspot.x * constraints.maxWidth) - (iconSize / 2),
-                  top: (hotspot.y * constraints.maxHeight) - (iconSize / 2),
+                  left: (hotspot.x * constraints.maxWidth) -
+                      (hotspotSize / 2),
+                  top: (hotspot.y * constraints.maxHeight) -
+                      (hotspotSize / 2),
                   child: GestureDetector(
                     onTap: () => onHotspotTap(hotspot),
                     child: const Icon(
                       Icons.location_on,
-                      size: iconSize,
                       color: Colors.red,
+                      size: hotspotSize,
                     ),
                   ),
                 ),
+              ),
+
+              /// Point Annotations
+              ...annotations
+                  .where(
+                    (annotation) =>
+                annotation['type'] == null ||
+                    annotation['type'] == 'point',
+              )
+                  .map(
+                    (annotation) {
+                  final double x =
+                  ((annotation['x'] as num?)?.toDouble() ?? 0);
+
+                  final double y =
+                  ((annotation['y'] as num?)?.toDouble() ?? 0);
+
+                  final String title =
+                      annotation['title']?.toString() ?? '';
+
+                  final Color markerColor =
+                  _hexToColor(annotation['color']);
+
+                  return Positioned(
+                    left: (x * constraints.maxWidth) -
+                        (annotationSize / 2),
+                    top: (y * constraints.maxHeight) -
+                        (annotationSize / 2),
+                    child: GestureDetector(
+                      onTap: () =>
+                          onAnnotationTap(annotation),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            color: markerColor,
+                            size: annotationSize,
+                          ),
+
+                          if (title.isNotEmpty)
+                            Container(
+                              padding:
+                              const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.black87,
+                                borderRadius:
+                                BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                title,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight:
+                                  FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
             ],
           );
         },
       ),
     );
+  }
+}
+
+/// Polygon Drawing Painter
+class PolygonPainter extends CustomPainter {
+  final List<Offset> points;
+
+  final Color color;
+
+  PolygonPainter({
+    required this.points,
+    required this.color,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (points.length < 3) return;
+
+    final fillPaint = Paint()
+      ..color = color.withOpacity(0.25)
+      ..style = PaintingStyle.fill;
+
+    final borderPaint = Paint()
+      ..color = color
+      ..strokeWidth = 3
+      ..style = PaintingStyle.stroke;
+
+    final path = Path();
+
+    path.moveTo(
+      points.first.dx,
+      points.first.dy,
+    );
+
+    for (final point in points.skip(1)) {
+      path.lineTo(
+        point.dx,
+        point.dy,
+      );
+    }
+
+    path.close();
+
+    canvas.drawPath(
+      path,
+      fillPaint,
+    );
+
+    canvas.drawPath(
+      path,
+      borderPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(
+      covariant PolygonPainter oldDelegate,
+      ) {
+    return oldDelegate.points != points ||
+        oldDelegate.color != color;
   }
 }

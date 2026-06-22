@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../data/repositories/cloudinary_repository.dart';
+import '../../../data/repositories/slide_repository.dart';
+
 import 'annotation_editor_screen.dart';
 import 'hotspot_list_screen.dart';
 
@@ -23,6 +25,9 @@ class _SlideManagementScreenState
   final CloudinaryRepository cloudinary =
   CloudinaryRepository();
 
+  final SlideRepository slideRepository =
+  SlideRepository();
+
   final FirebaseFirestore firestore =
       FirebaseFirestore.instance;
 
@@ -34,7 +39,8 @@ class _SlideManagementScreenState
 
       for (final image in images) {
         try {
-          final imageUrl = await cloudinary.uploadImage(
+          final imageUrl =
+          await cloudinary.uploadImage(
             File(image.path),
           );
 
@@ -64,7 +70,8 @@ class _SlideManagementScreenState
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Slides uploaded successfully'),
+          content:
+          Text('Slides uploaded successfully'),
         ),
       );
     } catch (e) {
@@ -74,14 +81,80 @@ class _SlideManagementScreenState
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Upload failed: $e'),
+          content: Text(
+            'Upload failed: $e',
+          ),
         ),
       );
     }
   }
 
-  Widget _buildSlideImage(String? imageUrl) {
-    if (imageUrl == null || imageUrl.isEmpty) {
+  Future<void> _confirmDelete({
+    required String slideId,
+    required String title,
+  }) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text(
+          'Delete Slide',
+        ),
+        content: Text(
+          "Delete '$title'?\n\nThis action cannot be undone.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () =>
+                Navigator.pop(context, false),
+            child: const Text(
+              'Cancel',
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () =>
+                Navigator.pop(context, true),
+            child: const Text(
+              'Delete',
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (result != true) return;
+
+    try {
+      await slideRepository.deleteSlide(
+        slideId,
+      );
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '$title deleted',
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Delete failed: $e',
+          ),
+        ),
+      );
+    }
+  }
+
+  Widget _buildSlideImage(
+      String? imageUrl,
+      ) {
+    if (imageUrl == null ||
+        imageUrl.isEmpty) {
       return const Icon(
         Icons.image,
         size: 50,
@@ -89,14 +162,16 @@ class _SlideManagementScreenState
     }
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius:
+      BorderRadius.circular(8),
       child: Image.network(
         imageUrl,
         width: 60,
         height: 60,
         fit: BoxFit.cover,
         errorBuilder:
-            (_, __, ___) => const Icon(
+            (_, __, ___) =>
+        const Icon(
           Icons.broken_image,
           size: 50,
         ),
@@ -113,20 +188,26 @@ class _SlideManagementScreenState
         ),
       ),
 
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton:
+      FloatingActionButton(
         onPressed: uploadSlides,
-        child: const Icon(Icons.upload),
+        child: const Icon(
+          Icons.upload,
+        ),
       ),
 
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding:
+            const EdgeInsets.all(12),
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: uploadSlides,
-                icon: const Icon(Icons.upload),
+                icon: const Icon(
+                  Icons.upload,
+                ),
                 label: const Text(
                   'Upload Images',
                 ),
@@ -135,8 +216,8 @@ class _SlideManagementScreenState
           ),
 
           Expanded(
-            child:
-            StreamBuilder<QuerySnapshot>(
+            child: StreamBuilder<
+                QuerySnapshot>(
               stream: firestore
                   .collection('slides')
                   .orderBy(
@@ -146,7 +227,8 @@ class _SlideManagementScreenState
                   .snapshots(),
               builder:
                   (context, snapshot) {
-                if (snapshot.connectionState ==
+                if (snapshot
+                    .connectionState ==
                     ConnectionState.waiting) {
                   return const Center(
                     child:
@@ -163,7 +245,8 @@ class _SlideManagementScreenState
                 }
 
                 if (!snapshot.hasData ||
-                    snapshot.data!.docs.isEmpty) {
+                    snapshot
+                        .data!.docs.isEmpty) {
                   return const Center(
                     child: Text(
                       'No slides uploaded',
@@ -180,7 +263,8 @@ class _SlideManagementScreenState
                       (context, index) {
                     final slide =
                     docs[index].data()
-                    as Map<String, dynamic>;
+                    as Map<String,
+                        dynamic>;
 
                     final slideId =
                         docs[index].id;
@@ -197,20 +281,21 @@ class _SlideManagementScreenState
 
                     return Card(
                       margin:
-                      const EdgeInsets.symmetric(
+                      const EdgeInsets
+                          .symmetric(
                         horizontal: 8,
                         vertical: 4,
                       ),
                       child: Padding(
                         padding:
-                        const EdgeInsets.all(
-                          12,
-                        ),
+                        const EdgeInsets
+                            .all(12),
                         child: Column(
                           children: [
                             ListTile(
                               contentPadding:
-                              EdgeInsets.zero,
+                              EdgeInsets
+                                  .zero,
                               leading:
                               _buildSlideImage(
                                 imageUrl,
@@ -218,8 +303,51 @@ class _SlideManagementScreenState
                               title: Text(
                                 title,
                               ),
-                              subtitle: Text(
+                              subtitle:
+                              Text(
                                 'ID: $slideId',
+                              ),
+                              trailing:
+                              PopupMenuButton<
+                                  String>(
+                                onSelected:
+                                    (value) {
+                                  if (value ==
+                                      'delete') {
+                                    _confirmDelete(
+                                      slideId:
+                                      slideId,
+                                      title:
+                                      title,
+                                    );
+                                  }
+                                },
+                                itemBuilder:
+                                    (context) =>
+                                const [
+                                  PopupMenuItem(
+                                    value:
+                                    'delete',
+                                    child:
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons
+                                              .delete,
+                                          color:
+                                          Colors.red,
+                                        ),
+                                        SizedBox(
+                                          width:
+                                          8,
+                                        ),
+                                        Text(
+                                          'Delete',
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
 
@@ -243,7 +371,8 @@ class _SlideManagementScreenState
                                     ),
                                     onPressed:
                                         () {
-                                      Navigator.push(
+                                      Navigator
+                                          .push(
                                         context,
                                         MaterialPageRoute(
                                           builder:
@@ -253,39 +382,6 @@ class _SlideManagementScreenState
                                                 slideId,
                                                 imageUrl:
                                                 imageUrl,
-                                              ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-
-                                const SizedBox(
-                                  width: 12,
-                                ),
-
-                                Expanded(
-                                  child:
-                                  ElevatedButton.icon(
-                                    icon:
-                                    const Icon(
-                                      Icons
-                                          .place,
-                                    ),
-                                    label:
-                                    const Text(
-                                      'Hotspots',
-                                    ),
-                                    onPressed:
-                                        () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder:
-                                              (_) =>
-                                              HotspotListScreen(
-                                                slideId:
-                                                slideId,
                                               ),
                                         ),
                                       );

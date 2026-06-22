@@ -1,16 +1,16 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 import '../controllers/microscope_controller.dart';
-import '../widgets/zoom_controls.dart';
 import '../widgets/slide_canvas.dart';
-
-import '../../../features/quiz/screens/quiz_screen.dart';
+import '../widgets/zoom_controls.dart';
 
 import '../../../data/models/slide_model.dart';
 import '../../../data/models/hotspot_model.dart';
+
 import '../../../data/repositories/hotspot_repository.dart';
+import '../../../data/repositories/annotation_repository.dart';
+
+import '../../../features/quiz/screens/quiz_screen.dart';
 
 import '../../../core/services/offline_slide_service.dart';
 
@@ -35,27 +35,37 @@ class _MicroscopeScreenState
   final HotspotRepository hotspotRepository =
   HotspotRepository();
 
+  final AnnotationRepository annotationRepository =
+  AnnotationRepository();
+
   String? offlinePath;
+
+  bool loading = true;
 
   @override
   void initState() {
     super.initState();
-
-    loadHotspots();
-    loadOfflineImage();
+    _initialize();
   }
 
-  Future<void> loadOfflineImage() async {
-    final path =
-    await OfflineSlideService().getOfflinePath(
-      widget.slide.id,
-    );
+  Future<void> _initialize() async {
+    await Future.wait([
+      loadOfflineImage(),
+      loadHotspots(),
+    ]);
 
     if (!mounted) return;
 
     setState(() {
-      offlinePath = path;
+      loading = false;
     });
+  }
+
+  Future<void> loadOfflineImage() async {
+    offlinePath =
+    await OfflineSlideService().getOfflinePath(
+      widget.slide.id,
+    );
   }
 
   Future<void> loadHotspots() async {
@@ -63,10 +73,6 @@ class _MicroscopeScreenState
     await hotspotRepository.getHotspots(
       widget.slide.id,
     );
-
-    if (!mounted) return;
-
-    setState(() {});
   }
 
   @override
@@ -85,6 +91,43 @@ class _MicroscopeScreenState
     );
   }
 
+  void _showAnnotation(
+      Map<String, dynamic> annotation,
+      ) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(
+          annotation['title'] ?? '',
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment:
+          CrossAxisAlignment.start,
+          children: [
+            Text(
+              annotation['description'] ?? '',
+            ),
+
+            const SizedBox(height: 10),
+
+            Text(
+              annotation['notes'] ?? '',
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            child: const Text("Close"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   void _openAITutor() {
     Navigator.pushNamed(
       context,
@@ -94,20 +137,14 @@ class _MicroscopeScreenState
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-      "Slide ID = ${widget.slide.id}",
-    );
-
-    debugPrint(
-      "Slide title = ${widget.slide.title}",
-    );
-
     return Scaffold(
       backgroundColor: Colors.black,
+
       appBar: AppBar(
         backgroundColor:
         Colors.black.withOpacity(.85),
         elevation: 0,
+
         title: Row(
           children: [
             Expanded(
@@ -130,6 +167,7 @@ class _MicroscopeScreenState
               ),
           ],
         ),
+
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
@@ -140,112 +178,163 @@ class _MicroscopeScreenState
           },
         ),
       ),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: SlideCanvas(
-                imagePath:
-                offlinePath ??
-                    widget.slide.imageUrl,
-                transformationController:
-                controller
-                    .transformationController,
-                hotspots: controller.hotspots
-                    .cast<HotspotModel>(),
-                onHotspotTap:
-                _showHotspotInfo,
-              ),
-            ),
 
-            Positioned(
-              right: 16,
-              top: 20,
-              child: ZoomControls(
-                onZoomIn:
-                controller.zoomIn,
-                onZoomOut:
-                controller.zoomOut,
-                onReset:
-                controller.resetZoom,
-              ),
-            ),
+      body: loading
+          ? const Center(
+        child:
+        CircularProgressIndicator(),
+      )
+          : StreamBuilder<
+          List<Map<String, dynamic>>>(
+        stream:
+        annotationRepository
+            .streamAnnotations(
+          widget.slide.id,
+        ),
 
-            Positioned(
-              left: 16,
-              right: 16,
-              bottom: 24,
-              child: SizedBox(
-                height: 90,
-                child: Container(
-                  padding:
-                  const EdgeInsets.all(
-                    12,
-                  ),
-                  decoration:
-                  BoxDecoration(
-                    color: Colors.black
-                        .withOpacity(.7),
-                    borderRadius:
-                    BorderRadius
-                        .circular(
-                      16,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment:
-                    MainAxisAlignment
-                        .spaceAround,
-                    children: [
-                      _actionButton(
-                        icon: Icons
-                            .note_alt_outlined,
-                        label:
-                        "Hotspot Notes",
-                        onTap: () {
-                          ScaffoldMessenger.of(
-                              context)
-                              .showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Tap a hotspot marker on the slide to view its information.',
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+        builder: (
+            context,
+            snapshot,
+            ) {
+          final annotations =
+              snapshot.data ?? [];
 
-                      _actionButton(
-                        icon: Icons.quiz,
-                        label: "Quiz",
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  QuizScreen(
-                                    slideId:
-                                    widget.slide.id,
-                                  ),
-                            ),
-                          );
-                        },
-                      ),
+          return SafeArea(
+            child: Stack(
+              children: [
 
-                      _actionButton(
-                        icon: Icons
-                            .smart_toy_outlined,
-                        label: "Ask AI",
-                        onTap:
-                        _openAITutor,
-                      ),
-                    ],
+                Positioned.fill(
+                  child: SlideCanvas(
+                    imagePath:
+                    offlinePath ??
+                        widget
+                            .slide
+                            .imageUrl,
+
+                    transformationController:
+                    controller
+                        .transformationController,
+
+                    hotspots:
+                    controller.hotspots
+                        .cast<
+                        HotspotModel>(),
+
+                    annotations:
+                    annotations,
+
+                    onHotspotTap:
+                    _showHotspotInfo,
+
+                    onAnnotationTap:
+                    _showAnnotation,
                   ),
                 ),
-              ),
+
+                Positioned(
+                  right: 16,
+                  top: 20,
+                  child:
+                  ZoomControls(
+                    onZoomIn:
+                    controller.zoomIn,
+                    onZoomOut:
+                    controller.zoomOut,
+                    onReset:
+                    controller.resetZoom,
+                  ),
+                ),
+
+                Positioned(
+                  left: 16,
+                  right: 16,
+                  bottom: 24,
+                  child: SizedBox(
+                    height: 90,
+                    child: Container(
+                      padding:
+                      const EdgeInsets
+                          .all(
+                        12,
+                      ),
+                      decoration:
+                      BoxDecoration(
+                        color: Colors
+                            .black
+                            .withOpacity(
+                          .7,
+                        ),
+                        borderRadius:
+                        BorderRadius
+                            .circular(
+                          16,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment
+                            .spaceAround,
+                        children: [
+
+                          _actionButton(
+                            icon: Icons
+                                .note_alt_outlined,
+                            label:
+                            "Hotspot Notes",
+                            onTap: () {
+                              ScaffoldMessenger.of(
+                                  context)
+                                  .showSnackBar(
+                                const SnackBar(
+                                  content:
+                                  Text(
+                                    "Tap a hotspot or annotation marker to view details.",
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+
+                          _actionButton(
+                            icon:
+                            Icons.quiz,
+                            label:
+                            "Quiz",
+                            onTap: () {
+                              Navigator
+                                  .push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (_) =>
+                                      QuizScreen(
+                                        slideId:
+                                        widget
+                                            .slide
+                                            .id,
+                                      ),
+                                ),
+                              );
+                            },
+                          ),
+
+                          _actionButton(
+                            icon: Icons
+                                .smart_toy_outlined,
+                            label:
+                            "Ask AI",
+                            onTap:
+                            _openAITutor,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -257,17 +346,23 @@ class _MicroscopeScreenState
   }) {
     return InkWell(
       onTap: onTap,
+
       borderRadius:
-      BorderRadius.circular(12),
+      BorderRadius.circular(
+        12,
+      ),
+
       child: Padding(
         padding:
         const EdgeInsets.symmetric(
           horizontal: 8,
           vertical: 4,
         ),
+
         child: Column(
           mainAxisSize:
           MainAxisSize.min,
+
           children: [
             Icon(
               icon,
@@ -275,9 +370,11 @@ class _MicroscopeScreenState
               Colors.lightGreenAccent,
               size: 28,
             ),
+
             const SizedBox(
               height: 4,
             ),
+
             Text(
               label,
               style: const TextStyle(

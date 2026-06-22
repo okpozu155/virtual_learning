@@ -6,6 +6,13 @@ class SlideRepository {
   final FirebaseFirestore firestore =
       FirebaseFirestore.instance;
 
+  Future<void> deleteSlide(String slideId) async {
+    await FirebaseFirestore.instance
+        .collection('slides')
+        .doc(slideId)
+        .delete();
+  }
+
   Future<List<SlideModel>> getSlides() async {
     final snapshot =
     await firestore

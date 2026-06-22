@@ -57,6 +57,7 @@ class WelcomePage extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
+                    fontWeight: FontWeight.bold,
                     color: Colors.black54,
                     height: 1.5,
                   ),
@@ -157,7 +158,7 @@ class WelcomePage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.white54,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.black12, width: 1),
       ),
