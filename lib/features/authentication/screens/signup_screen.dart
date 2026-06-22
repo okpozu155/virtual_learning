@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
-import '../../../core/utils/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../../core/utils/validators.dart';
+import 'login_screen.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -13,6 +15,8 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  final _formKey = GlobalKey<FormState>();
+
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -21,7 +25,27 @@ class _SignupPageState extends State<SignupPage> {
   bool loading = false;
 
   Future<void> signUp() async {
-    if (_passwordController.text != _confirmPasswordController.text) {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    final credential =
+    await _auth.createUserWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(credential.user!.uid)
+        .set({
+      'name': _nameController.text.trim(),
+      'email': _emailController.text.trim(),
+      'role': 'student', // default role
+      'createdAt': Timestamp.now(),
+    });
+
+    if (_passwordController.text.trim() !=
+        _confirmPasswordController.text.trim()) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Passwords do not match'),
@@ -38,20 +62,20 @@ class _SignupPageState extends State<SignupPage> {
         password: _passwordController.text.trim(),
       );
 
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Account created successfully'),
         ),
       );
 
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const LoginPage(),
-          ),
-        );
-      }
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const LoginPage(),
+        ),
+      );
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -67,29 +91,34 @@ class _SignupPageState extends State<SignupPage> {
     }
   }
 
-  // ==================== UPDATED HELPER WIDGET ====================
-  Widget buildField(
-      TextEditingController controller,
-      IconData icon,
-      String hint,
-      bool obscure,
-      ) {
-    return TextField(
+  Widget buildField({
+    required TextEditingController controller,
+    required IconData icon,
+    required String hint,
+    required bool obscure,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
       controller: controller,
       obscureText: obscure,
+      validator: validator,
       decoration: InputDecoration(
         prefixIcon: Icon(icon),
         filled: true,
-        fillColor: const Color.fromARGB(255, 140, 133, 236), // FIXED: Changed from yellow hex to light gray
+        fillColor: const Color.fromARGB(
+          255,
+          155,
+          218,
+          149,
+        ),
         hintText: hint,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none, // Optional: removes the black outline border for a cleaner look
+          borderSide: BorderSide.none,
         ),
       ),
     );
   }
-  // ==============================================================
 
   @override
   Widget build(BuildContext context) {
@@ -98,86 +127,92 @@ class _SignupPageState extends State<SignupPage> {
         title: const Text('Create Account'),
         centerTitle: true,
       ),
-
-
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(22),
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
 
-            buildField(
-              _nameController,
-              Icons.person_outline,
-              "Full Name",
-              false,
-            ),
-
-            const SizedBox(height: 15),
-
-            buildField(
-              _emailController,
-              Icons.email_outlined,
-              "Email",
-              false,
-            ),
-
-            const SizedBox(height: 15),
-
-            buildField(
-              _passwordController,
-              Icons.lock_outline,
-              "Password",
-              true,
-            ),
-
-            const SizedBox(height: 15),
-
-            buildField(
-              _confirmPasswordController,
-              Icons.lock_outline,
-              "Confirm Password",
-              true,
-            ),
-
-            const SizedBox(height: 25),
-
-            SizedBox(
-              width: double.infinity,
-              height: 55,
-              child: ElevatedButton(
-                onPressed: loading ? null : signUp,
-                child: loading
-                    ? const CircularProgressIndicator()
-                    : const Text("Sign Up"),
+              buildField(
+                controller: _nameController,
+                icon: Icons.person_outline,
+                hint: "Full Name",
+                obscure: false,
+                validator: Validators.validateName,
               ),
-            ),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 15),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Already have an account?",
+              buildField(
+                controller: _emailController,
+                icon: Icons.email_outlined,
+                hint: "Email",
+                obscure: false,
+                validator: Validators.validateEmail,
+              ),
+
+              const SizedBox(height: 15),
+
+              buildField(
+                controller: _passwordController,
+                icon: Icons.lock_outline,
+                hint: "Password",
+                obscure: true,
+                validator: Validators.validatePassword,
+              ),
+
+              const SizedBox(height: 15),
+
+              buildField(
+                controller: _confirmPasswordController,
+                icon: Icons.lock_outline,
+                hint: "Confirm Password",
+                obscure: true,
+                validator: Validators.validatePassword,
+              ),
+
+              const SizedBox(height: 25),
+
+              SizedBox(
+                width: double.infinity,
+                height: 55,
+                child: ElevatedButton(
+                  onPressed: loading ? null : signUp,
+                  child: loading
+                      ? const CircularProgressIndicator()
+                      : const Text("Sign Up"),
                 ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const LoginPage(),
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    "Sign In",
+              ),
+
+              const SizedBox(height: 20),
+
+              Row(
+                mainAxisAlignment:
+                MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Already have an account?",
                   ),
-                ),
-              ],
-            ),
-          ],
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                          const LoginPage(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      "Sign In",
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -8,7 +8,8 @@ class AnalyticsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Analytics')),
       body: const Center(
-        child: Text('Analytics Screen'),
+        child: Text('Coming Soon...'
+        ),
       ),
     );
   }
