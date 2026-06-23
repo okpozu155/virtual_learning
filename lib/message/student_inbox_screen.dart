@@ -49,9 +49,11 @@ class StudentInboxScreen extends StatelessWidget {
           }
 
           if (snapshot.hasError) {
-            return Center(
+            debugPrint(snapshot.error.toString());
+
+            return const Center(
               child: Text(
-                snapshot.error.toString(),
+                "Unable to load messages",
               ),
             );
           }
