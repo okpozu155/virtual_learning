@@ -4,9 +4,9 @@ import '../widgets/dashboard_card.dart';
 
 import '../../../features/profile/screens/student_profile_screen.dart';
 import '../../../features/progress/screens/recent_topics_screen.dart';
-import '../../../message/student_chat_screen.dart';
+
 import '../../../message/message_admin_screen.dart';
-import '../../../message/student_chat_screen.dart';
+
 import '../../../message/student_bulletin_screen.dart';
 import '../../../message/student_inbox_screen.dart';
 
@@ -17,6 +17,7 @@ import '../../quiz/screens/quiz_screen.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/services/local_storage_service.dart';
 import '../../../core/services/progress_service.dart';
+import '../../../core/theme/character_animation.dart';
 
 import '../../../data/models/slide_model.dart';
 import '../../../data/repositories/slide_repository.dart';
@@ -28,12 +29,14 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
+
 class _HomeScreenState extends State<HomeScreen> {
   final SlideRepository _repository = SlideRepository();
 
   List<SlideModel> allSlides = [];
 
   double overallProgress = 0;
+
 
   @override
   void initState() {
@@ -261,14 +264,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(height: 8),
 
-            const Text(
-              "Continue your microscopy journey",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFFDC3F3F),
-              ),
+            const CharacterAnimation(
+              text: "Continue your microscopy journey",
+              color: Color(0xFF239C16),
             ),
+
+
 
             const SizedBox(height: 20),
 

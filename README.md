@@ -496,4 +496,8 @@ The platform successfully combines virtual microscopy, offline learning, interac
 
 
 
+<<<<<<< HEAD
 ** Future development
+=======
+** Future development
+>>>>>>> 4f182fb (Updated and Fixed the Polygon Annotation)
