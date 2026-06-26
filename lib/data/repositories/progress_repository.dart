@@ -49,6 +49,23 @@ class ProgressRepository {
     await _firestore
         .collection('progress')
         .doc(userId)
-        .set(progress.toJson());
+        .set(
+      progress.toJson(),
+      SetOptions(merge: true),
+    );
+  }
+
+  Future<void> createInitialProgress(
+      String userId,
+      ) async {
+    await _firestore
+        .collection('progress')
+        .doc(userId)
+        .set({
+      'slidesViewed': 0,
+      'quizzesTaken': 0,
+      'averageScore': 0,
+      'streakDays': 0,
+    });
   }
 }

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-
-
-
 import '../../../data/models/progress_model.dart';
 import '../../../data/repositories/progress_repository.dart';
 import '../../authentication/controllers/auth_controller.dart';

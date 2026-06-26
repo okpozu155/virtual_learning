@@ -1,8 +1,9 @@
 
 import 'package:flutter/material.dart';
+import '../../../core/routes/app_routes.dart';
 
-class ComingSoonPage extends StatelessWidget {
-  const ComingSoonPage({super.key});
+class ComingSoonPages extends StatelessWidget {
+  const ComingSoonPages({super.key});
 
   @override
   Widget build(BuildContext context) {

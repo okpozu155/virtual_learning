@@ -21,6 +21,7 @@ import '../../../core/theme/character_animation.dart';
 
 import '../../../data/models/slide_model.dart';
 import '../../../data/repositories/slide_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -71,7 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> openMicroscope() async {
     final storage = LocalStorageService();
 
-    final slideId = await storage.getLastViewedSlide();
+    final slideId =
+    await storage.getLastViewedSlide();
 
     if (slideId == null) {
       if (!mounted) return;
@@ -95,7 +97,8 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    final slide = await _repository.getSlideById(slideId);
+    final slide =
+    await _repository.getSlideById(slideId);
 
     if (slide == null) {
       if (!mounted) return;
@@ -126,8 +129,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> openLastQuiz() async {
+    final storage = LocalStorageService();
+
     final slideId =
-    await LocalStorageService().getLastViewedSlide();
+    await storage.getLastViewedSlide();
 
     if (slideId == null) {
       if (!mounted) return;
@@ -139,6 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       );
+
       return;
     }
 
@@ -318,6 +324,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: Icons.quiz,
                   color: Colors.purple,
                   onTap: openLastQuiz,
+                ),
+
+                DashboardCard(
+                  title: "Ask AI",
+                  icon: Icons.smart_toy,
+                  color: Colors.orange,
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      '/ai-tutor',
+                    );
+                  },
                 ),
               ],
             ),

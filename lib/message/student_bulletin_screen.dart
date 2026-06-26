@@ -12,7 +12,7 @@ class StudentBulletinScreen extends StatelessWidget {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('bulletins')
+            .collection('announcements')
             .orderBy(
           'createdAt',
           descending: true,

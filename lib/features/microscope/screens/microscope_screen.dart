@@ -13,6 +13,8 @@ import '../../../data/repositories/annotation_repository.dart';
 import '../../../features/quiz/screens/quiz_screen.dart';
 
 import '../../../core/services/offline_slide_service.dart';
+import '../../../core/services/local_storage_service.dart';
+
 
 class MicroscopeScreen extends StatefulWidget {
   final SlideModel slide;
@@ -45,6 +47,11 @@ class _MicroscopeScreenState
   @override
   void initState() {
     super.initState();
+
+    LocalStorageService().saveLastViewedSlide(
+      widget.slide.id,
+    );
+
     _initialize();
   }
 
@@ -338,6 +345,7 @@ class _MicroscopeScreenState
       ),
     );
   }
+
 
   Widget _actionButton({
     required IconData icon,

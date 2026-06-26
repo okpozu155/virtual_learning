@@ -28,21 +28,6 @@ class _SignupPageState extends State<SignupPage> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    final credential =
-    await _auth.createUserWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
-
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(credential.user!.uid)
-        .set({
-      'name': _nameController.text.trim(),
-      'email': _emailController.text.trim(),
-      'role': 'student', // default role
-      'createdAt': Timestamp.now(),
-    });
 
     if (_passwordController.text.trim() !=
         _confirmPasswordController.text.trim()) {
@@ -57,10 +42,35 @@ class _SignupPageState extends State<SignupPage> {
     try {
       setState(() => loading = true);
 
+      final credential =
       await _auth.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+
+      final userId = credential.user!.uid;
+
+      // Save user profile
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .set({
+        'name': _nameController.text.trim(),
+        'email': _emailController.text.trim(),
+        'role': 'student',
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      // Create progress document
+      await FirebaseFirestore.instance
+          .collection('progress')
+          .doc(userId)
+          .set({
+        'slidesViewed': 0,
+        'quizzesTaken': 0,
+        'averageScore': 0,
+        'streakDays': 0,
+      });
 
       if (!mounted) return;
 
@@ -216,6 +226,7 @@ class _SignupPageState extends State<SignupPage> {
         ),
       ),
     );
+
   }
 
   @override
@@ -226,4 +237,5 @@ class _SignupPageState extends State<SignupPage> {
     _confirmPasswordController.dispose();
     super.dispose();
   }
+
 }

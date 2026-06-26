@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:virtual_learning/data/repositories/ai_repository.dart';
 
 import '../../features/onboarding/screens/splash_screen.dart';
 import '../../features/onboarding/screens/welcome_screen.dart';
@@ -10,7 +11,7 @@ import '../../features/profile/screens/profile_screen.dart';
 import '../../features/progress/screens/progress_screen.dart';
 import '../../features/slide_library/screens/library_screen.dart';
 import '../../features/authentication/screens/authentication_guard_screen.dart';
-
+import '../../features/ai_tutor/screens/ai_tutor_screen.dart';
 import '../../features/hotspot_notes/screens/hotspot_info_screen.dart';
 
 import '../../features/admin/screens/admin_dashboard_screen.dart';
@@ -30,7 +31,7 @@ class AppRoutes {
   static const String profile = "/profile";
   static const String progress = "/progress";
   static const String library = "/library";
-
+  static const String ask_ai = "/AI_Tutor";
   static const String hotspotInfo = "/hotspot-info";
 
   static const String adminDashboard = "/admin-dashboard";
@@ -64,6 +65,8 @@ class AppRoutes {
 
     slideManagement: (context) =>
     const SlideManagementScreen(),
+
+    ask_ai: (context) => const ComingSoonPages(),
 
     // Uncomment only if screens exist
 

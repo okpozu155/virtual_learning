@@ -27,21 +27,33 @@ class SlideCanvas extends StatelessWidget {
     required this.onAnnotationTap,
   });
 
-  Color _hexToColor(String? hex) {
-    if (hex == null || hex.isEmpty) {
-      return Colors.blue;
+  Color _hexToColor(dynamic value) {
+    if (value == null) {
+      return Colors.red;
     }
 
-    final cleanedHex = hex.replaceAll('#', '');
+    // New annotation system stores color as an int.
+    if (value is int) {
+      return Color(value);
+    }
 
-    return Color(
-      int.parse(
-        'FF$cleanedHex',
-        radix: 16,
-      ),
-    );
+    // Legacy annotation system stores color as a hex string.
+    if (value is String) {
+      try {
+        var hex = value.replaceAll('#', '');
+
+        if (hex.length == 6) {
+          hex = 'FF$hex';
+        }
+
+        return Color(int.parse(hex, radix: 16));
+      } catch (_) {
+        return Colors.red;
+      }
+    }
+
+    return Colors.red;
   }
-
   @override
   Widget build(BuildContext context) {
     const double hotspotSize = 30;
@@ -70,7 +82,7 @@ class SlideCanvas extends StatelessWidget {
 
               /// Polygon Annotations
               ...annotations
-                  .where((a) => a['type'] == 'polygon')
+                  .where((a) => a['type'] == 'polygon' || a['shape'] != null)
                   .map(
                     (polygon) {
                   final points =

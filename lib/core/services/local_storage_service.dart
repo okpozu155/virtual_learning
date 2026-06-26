@@ -1,11 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorageService {
-  static const String lastViewedSlideKey =
-      'last_viewed_slide';
+  String get _uid =>
+      FirebaseAuth.instance.currentUser?.uid ?? 'guest';
 
-  static const String recentSlidesKey =
-      'recent_slides';
+  String get _lastViewedKey =>
+      'last_viewed_slide_$_uid';
+
+  String get _recentSlidesKey =>
+      'recent_slides_$_uid';
 
   Future<void> saveLastViewedSlide(
       String slideId,
@@ -14,13 +18,13 @@ class LocalStorageService {
     await SharedPreferences.getInstance();
 
     await prefs.setString(
-      lastViewedSlideKey,
+      _lastViewedKey,
       slideId,
     );
 
     List<String> recentSlides =
         prefs.getStringList(
-          recentSlidesKey,
+          _recentSlidesKey,
         ) ??
             [];
 
@@ -29,11 +33,12 @@ class LocalStorageService {
     recentSlides.insert(0, slideId);
 
     if (recentSlides.length > 7) {
-      recentSlides = recentSlides.sublist(0, 7);
+      recentSlides =
+          recentSlides.sublist(0, 7);
     }
 
     await prefs.setStringList(
-      recentSlidesKey,
+      _recentSlidesKey,
       recentSlides,
     );
   }
@@ -43,7 +48,7 @@ class LocalStorageService {
     await SharedPreferences.getInstance();
 
     return prefs.getString(
-      lastViewedSlideKey,
+      _lastViewedKey,
     );
   }
 
@@ -52,8 +57,16 @@ class LocalStorageService {
     await SharedPreferences.getInstance();
 
     return prefs.getStringList(
-      recentSlidesKey,
+      _recentSlidesKey,
     ) ??
         [];
+  }
+
+  Future<void> clearUserHistory() async {
+    final prefs =
+    await SharedPreferences.getInstance();
+
+    await prefs.remove(_lastViewedKey);
+    await prefs.remove(_recentSlidesKey);
   }
 }

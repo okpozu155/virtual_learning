@@ -2,10 +2,57 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'student_chat_screen.dart';
-
 class StudentInboxScreen extends StatelessWidget {
   const StudentInboxScreen({super.key});
+
+  void showMessageDetails(
+      BuildContext context,
+      Map<String, dynamic> data,
+      ) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("Message Details"),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                "Your Message",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(data['message'] ?? ''),
+
+              const SizedBox(height: 20),
+
+              const Text(
+                "Admin Reply",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                (data['reply'] ?? '').toString().isNotEmpty
+                    ? data['reply']
+                    : "No reply yet",
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Close"),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +79,11 @@ class StudentInboxScreen extends StatelessWidget {
         stream: FirebaseFirestore.instance
             .collection('messages')
             .where(
-          'participants',
-          arrayContains: currentUser.uid,
+          'senderId',
+          isEqualTo: currentUser.uid,
         )
             .orderBy(
-          'updatedAt',
+          'timestamp',
           descending: true,
         )
             .snapshots(),
@@ -67,56 +114,70 @@ class StudentInboxScreen extends StatelessWidget {
             );
           }
 
-          final conversations =
-              snapshot.data!.docs;
+          final messages = snapshot.data!.docs;
 
           return ListView.builder(
-            itemCount: conversations.length,
+            itemCount: messages.length,
             itemBuilder: (context, index) {
-              final doc =
-              conversations[index];
+              final doc = messages[index];
 
               final data =
-              doc.data()
-              as Map<String, dynamic>;
+              doc.data() as Map<String, dynamic>;
 
               return Card(
-                margin:
-                const EdgeInsets.symmetric(
+                margin: const EdgeInsets.symmetric(
                   horizontal: 12,
                   vertical: 6,
                 ),
                 child: ListTile(
-                  leading: const CircleAvatar(
+                  leading: CircleAvatar(
+                    backgroundColor:
+                    data['replied'] == true
+                        ? Colors.green
+                        : Colors.orange,
                     child: Icon(
-                      Icons.admin_panel_settings,
+                      data['replied'] == true
+                          ? Icons.mark_email_read
+                          : Icons.mark_email_unread,
+                      color: Colors.white,
                     ),
                   ),
                   title: Text(
-                    data['adminName'] ??
-                        'Admin',
+                    data['message'] ?? '',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  subtitle: Text(
-                    data['lastMessage'] ??
-                        'No messages',
-                    maxLines: 1,
-                    overflow:
-                    TextOverflow.ellipsis,
+                  subtitle: Padding(
+                    padding:
+                    const EdgeInsets.only(top: 8),
+                    child: Text(
+                      (data['reply'] ?? '')
+                          .toString()
+                          .isNotEmpty
+                          ? "Admin: ${data['reply']}"
+                          : "Awaiting admin reply...",
+                      style: TextStyle(
+                        color: (data['reply'] ?? '')
+                            .toString()
+                            .isNotEmpty
+                            ? Colors.green
+                            : Colors.orange,
+                      ),
+                    ),
                   ),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
+                  trailing: data['replied'] == true
+                      ? const Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                  )
+                      : const Icon(
+                    Icons.access_time,
+                    color: Colors.orange,
                   ),
                   onTap: () {
-                    Navigator.push(
+                    showMessageDetails(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            StudentChatScreen(
-                              conversationId:
-                              doc.id,
-                            ),
-                      ),
+                      data,
                     );
                   },
                 ),
