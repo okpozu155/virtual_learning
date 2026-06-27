@@ -4,25 +4,18 @@ import '../../../data/models/quiz_model.dart';
 import '../../../data/models/question_model.dart';
 import '../../../data/repositories/quiz_repository.dart';
 import '../../../core/services/progress_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 
 class QuizScreen extends StatefulWidget {
   final String slideId;
 
-  const QuizScreen({
-    super.key,
-    required this.slideId,
-  });
+  const QuizScreen({super.key, required this.slideId});
 
   @override
-  State<QuizScreen> createState() =>
-      _QuizScreenState();
+  State<QuizScreen> createState() => _QuizScreenState();
 }
 
 class _QuizScreenState extends State<QuizScreen> {
-  final QuizRepository repository =
-  QuizRepository();
+  final QuizRepository repository = QuizRepository();
 
   QuizModel? quiz;
 
@@ -30,22 +23,17 @@ class _QuizScreenState extends State<QuizScreen> {
   int score = 0;
   bool loading = true;
 
-
   @override
   void initState() {
     super.initState();
 
-    debugPrint(
-      "Quiz opened for slide: ${widget.slideId}",
-    );
+    debugPrint("Quiz opened for slide: ${widget.slideId}");
     loadQuiz();
   }
 
   Future<void> loadQuiz() async {
     try {
-      quiz = await repository.getQuizBySlideId(
-        widget.slideId,
-      );
+      quiz = await repository.getQuizBySlideId(widget.slideId);
 
       setState(() {
         loading = false;
@@ -60,40 +48,28 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   Future<void> answerQuestion(int selectedIndex) async {
-    final question =
-    quiz!.questions[currentIndex];
+    final question = quiz!.questions[currentIndex];
 
-    if (selectedIndex ==
-        question.correctAnswer) {
+    if (selectedIndex == question.correctAnswer) {
       score++;
     }
 
-    if (currentIndex <
-        quiz!.questions.length - 1) {
+    if (currentIndex < quiz!.questions.length - 1) {
       setState(() {
         currentIndex++;
       });
-    } else { final percentage =
-    ((score / quiz!.questions.length) * 100)
-        .round();
+    } else {
+      final percentage = ((score / quiz!.questions.length) * 100).round();
 
-    await ProgressService.saveProgress(
-      widget.slideId,
-      percentage,
+      await ProgressService.saveProgress(widget.slideId, percentage);
 
-    );
-    debugPrint(
-      "Saved progress for ${widget.slideId}: $percentage%",
-    );
+      if (!mounted) return;
+
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
-          title: const Text(
-            "Quiz Complete",
-          ),
-          content: Text(
-            "Score: $score / ${quiz!.questions.length}",
-          ),
+          title: const Text("Quiz Complete"),
+          content: Text("Score: $score / ${quiz!.questions.length}"),
           actions: [
             TextButton(
               onPressed: () {
@@ -111,20 +87,13 @@ class _QuizScreenState extends State<QuizScreen> {
   @override
   Widget build(BuildContext context) {
     if (loading) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (quiz == null) {
       return const Scaffold(
         body: Center(
-          child: Text(
-            "No quiz available",
-            style: TextStyle(fontSize: 18),
-          ),
+          child: Text("No quiz available", style: TextStyle(fontSize: 18)),
         ),
       );
     }
@@ -132,101 +101,78 @@ class _QuizScreenState extends State<QuizScreen> {
     if (quiz!.questions.isEmpty) {
       return const Scaffold(
         body: Center(
-          child: Text(
-            "No questions found",
-            style: TextStyle(fontSize: 18),
-          ),
+          child: Text("No questions found", style: TextStyle(fontSize: 18)),
         ),
       );
     }
 
-    final QuestionModel question =
-    quiz!.questions[currentIndex];
+    final QuestionModel question = quiz!.questions[currentIndex];
 
     return Scaffold(
-
-      appBar: AppBar(
-        title: Text(
-          quiz?.title ?? "Quiz",
-        ),
-      ),
+      appBar: AppBar(title: Text(quiz?.title ?? "Quiz")),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             LinearProgressIndicator(
-              value: (currentIndex + 1) /
-                  quiz!.questions.length,
+              value: (currentIndex + 1) / quiz!.questions.length,
             ),
 
             const SizedBox(height: 20),
 
             Text(
               question.question,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 30),
 
-            ...question.options.asMap().entries.map(
-                  (entry) {
-                final index = entry.key;
-                final option = entry.value;
+            ...question.options.asMap().entries.map((entry) {
+              final index = entry.key;
+              final option = entry.value;
 
-                return Padding(
-                  padding:
-                  const EdgeInsets.symmetric(
-                    vertical: 6,
-                  ),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () =>
-                          answerQuestion(index),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 16,
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 30,
-                            child: Text(
-                              String.fromCharCode(65 + index),
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(width: 12),
-
-                          Expanded(
-                            child: Text(
-                              option,
-                              style: const TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ],
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => answerQuestion(index),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
                       ),
                     ),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 30,
+                          child: Text(
+                            String.fromCharCode(65 + index),
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(width: 12),
+
+                        Expanded(
+                          child: Text(
+                            option,
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            }),
           ],
         ),
       ),
     );
-
   }
-
 }

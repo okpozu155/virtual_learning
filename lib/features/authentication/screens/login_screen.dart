@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/utils/validators.dart';
 import 'forgot_password_screen.dart';
-import 'signup_screen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -22,12 +21,10 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController =
   TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
-
   bool loading = false;
 
-  Future<void> login() async {
-    if (!_formKey.currentState!.validate()) {
+  Future<void> login(BuildContext formContext) async {
+    if (!Form.of(formContext).validate()) {
       return;
     }
 
@@ -148,11 +145,12 @@ class _LoginPageState extends State<LoginPage> {
             horizontal: 22,
           ),
           child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment:
-              CrossAxisAlignment.stretch,
-              children: [
+            child: Builder(
+              builder: (formContext) {
+                return Column(
+                  crossAxisAlignment:
+                  CrossAxisAlignment.stretch,
+                  children: [
                 const Text(
                   "Welcome Back!",
                   textAlign: TextAlign.center,
@@ -227,7 +225,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 55,
                   child: ElevatedButton(
                     onPressed:
-                    loading ? null : login,
+                    loading ? null : () => login(formContext),
                     child: loading
                         ? const CircularProgressIndicator()
                         : const Text(
@@ -258,18 +256,18 @@ class _LoginPageState extends State<LoginPage> {
                     const Text("Don't have an account?"),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
+                        Navigator.pushReplacementNamed(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => const SignupPage(),
-                          ),
+                          AppRoutes.signup,
                         );
                       },
                       child: const Text("Sign Up"),
                     ),
                   ],
                 ),
-              ],
+                  ],
+                );
+              },
             ),
           ),
         ),

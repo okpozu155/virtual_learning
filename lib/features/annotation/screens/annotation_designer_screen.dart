@@ -73,6 +73,141 @@ class _AnnotationDesignerScreenState
     );
   }
 
+  Future<void> _editSelectedShape() async {
+    final shape = controller.selectedShape;
+
+    if (shape == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Select a shape first.",
+          ),
+        ),
+      );
+      return;
+    }
+
+    final titleController = TextEditingController(
+      text: shape.title,
+    );
+    final descriptionController = TextEditingController(
+      text: shape.description,
+    );
+    final notesController = TextEditingController(
+      text: shape.notes,
+    );
+
+    final colors = <Color>[
+      Colors.red,
+      Colors.blue,
+      Colors.green,
+      Colors.orange,
+      Colors.purple,
+      Colors.black,
+    ];
+
+    Color selectedColor = shape.color;
+
+    final saved = await showDialog<bool>(
+      context: context,
+      builder: (_) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          return AlertDialog(
+            title: const Text("Annotation Details"),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: titleController,
+                    decoration: const InputDecoration(
+                      labelText: "Title",
+                    ),
+                  ),
+                  TextField(
+                    controller: descriptionController,
+                    decoration: const InputDecoration(
+                      labelText: "Description",
+                    ),
+                    minLines: 2,
+                    maxLines: 4,
+                  ),
+                  TextField(
+                    controller: notesController,
+                    decoration: const InputDecoration(
+                      labelText: "Notes",
+                    ),
+                    minLines: 2,
+                    maxLines: 4,
+                  ),
+                  const SizedBox(height: 16),
+                  Wrap(
+                    spacing: 10,
+                    children: colors.map((color) {
+                      final isSelected =
+                          color.toARGB32() == selectedColor.toARGB32();
+
+                      return InkWell(
+                        borderRadius: BorderRadius.circular(18),
+                        onTap: () {
+                          setDialogState(() {
+                            selectedColor = color;
+                          });
+                        },
+                        child: Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: color,
+                            border: Border.all(
+                              color: isSelected
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Colors.transparent,
+                              width: 3,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text("Cancel"),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text("Save"),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+
+    final title = titleController.text.trim();
+    final description = descriptionController.text.trim();
+    final notes = notesController.text.trim();
+
+    titleController.dispose();
+    descriptionController.dispose();
+    notesController.dispose();
+
+    if (saved != true) return;
+
+    await controller.updateShapeDetails(
+      slideId: widget.slideId,
+      title: title,
+      description: description,
+      notes: notes,
+      color: selectedColor,
+    );
+  }
+
   Future<void> _deleteShape() async {
     if (!controller.hasSelection) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -124,24 +259,41 @@ class _AnnotationDesignerScreenState
       appBar: AppBar(
         title: const Text("Annotation Designer"),
         actions: [
-          IconButton(
-            tooltip: "Add Shape",
-            icon: const Icon(Icons.add_box_outlined),
-            onPressed: _addShape,
-          ),
-          IconButton(
-            tooltip: "Duplicate",
-            icon: const Icon(Icons.copy),
-            onPressed: controller.hasSelection
-                ? _duplicateShape
-                : null,
-          ),
-          IconButton(
-            tooltip: "Delete",
-            icon: const Icon(Icons.delete),
-            onPressed: controller.hasSelection
-                ? _deleteShape
-                : null,
+          AnimatedBuilder(
+            animation: controller,
+            builder: (context, _) {
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    tooltip: "Add Shape",
+                    icon: const Icon(Icons.add_box_outlined),
+                    onPressed: _addShape,
+                  ),
+                  IconButton(
+                    tooltip: "Duplicate",
+                    icon: const Icon(Icons.copy),
+                    onPressed: controller.hasSelection
+                        ? _duplicateShape
+                        : null,
+                  ),
+                  IconButton(
+                    tooltip: "Edit Details",
+                    icon: const Icon(Icons.edit_note),
+                    onPressed: controller.hasSelection
+                        ? _editSelectedShape
+                        : null,
+                  ),
+                  IconButton(
+                    tooltip: "Delete",
+                    icon: const Icon(Icons.delete),
+                    onPressed: controller.hasSelection
+                        ? _deleteShape
+                        : null,
+                  ),
+                ],
+              );
+            },
           ),
         ],
       ),
@@ -153,6 +305,8 @@ class _AnnotationDesignerScreenState
         controller: controller,
         slideId: widget.slideId,
         imageUrl: widget.imageUrl,
+        onShapePlaced: _editSelectedShape,
+        onShapeEdit: (_) => _editSelectedShape(),
       ),
     );
   }

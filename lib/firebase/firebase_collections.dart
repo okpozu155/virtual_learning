@@ -6,4 +6,7 @@ class FirestoreCollections {
 
   static String hotspots(String slideId) =>
       'slides/$slideId/hotspots';
+
+  static String annotations(String slideId) =>
+      'slides/$slideId/annotations';
 }

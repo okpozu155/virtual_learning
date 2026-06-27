@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
+import '../../firebase/firebase_collections.dart';
 import '../../features/annotation/models/annotation_shape.dart';
 
 class AnnotationRepository {
@@ -15,10 +15,9 @@ class AnnotationRepository {
   CollectionReference<Map<String, dynamic>> _collection(
       String slideId,
       ) {
-    return _firestore
-        .collection("slides")
-        .doc(slideId)
-        .collection("annotations");
+    return _firestore.collection(
+      FirestoreCollections.annotations(slideId),
+    );
   }
 
   //==========================================================
@@ -27,12 +26,6 @@ class AnnotationRepository {
 
   Future<List<AnnotationShape>> loadShapes(String slideId) async {
     final snapshot = await _collection(slideId).get();
-
-    for (final doc in snapshot.docs) {
-      print("----------------------");
-      print(doc.data());
-      print("----------------------");
-    }
 
     return snapshot.docs
         .map((doc) => AnnotationShape.fromFirestore(doc.id, doc.data()))
@@ -69,17 +62,11 @@ class AnnotationRepository {
     required String slideId,
     required AnnotationShape shape,
   }) async {
-    try {
-      await _collection(slideId)
-          .doc(shape.id)
-          .set(shape.toFirestore());
-
-      print("Annotation saved.");
-    } catch (e, stack) {
-      print("Firestore save failed:");
-      print(e);
-      print(stack);
-    }
+    await _collection(slideId).doc(shape.id).set({
+      ...shape.toFirestore(),
+      'createdAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
   }
   //==========================================================
   // UPDATE
@@ -89,9 +76,10 @@ class AnnotationRepository {
     required String slideId,
     required AnnotationShape shape,
   }) async {
-    await _collection(slideId)
-        .doc(shape.id)
-        .update(shape.toFirestore());
+    await _collection(slideId).doc(shape.id).update({
+      ...shape.toFirestore(),
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
   }
 
   //==========================================================
@@ -141,7 +129,10 @@ class AnnotationRepository {
 
       batch.set(
         ref,
-        shape.toFirestore(),
+        {
+          ...shape.toFirestore(),
+          'updatedAt': FieldValue.serverTimestamp(),
+        },
       );
     }
 
@@ -159,7 +150,12 @@ class AnnotationRepository {
     await _collection(slideId).get();
 
     return snapshot.docs
-        .map((e) => e.data())
+        .map(
+          (e) => {
+            'id': e.id,
+            ...e.data(),
+          },
+        )
         .toList();
   }
 
@@ -170,7 +166,12 @@ class AnnotationRepository {
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
-          .map((e) => e.data())
+          .map(
+            (e) => {
+              'id': e.id,
+              ...e.data(),
+            },
+          )
           .toList(),
     );
   }

@@ -12,6 +12,8 @@ class AnnotationShapeWidget extends StatelessWidget {
 
   final VoidCallback? onTap;
 
+  final VoidCallback? onDoubleTap;
+
   final ValueChanged<Offset> onMove;
 
   final void Function(double width, double height) onResize;
@@ -21,6 +23,7 @@ class AnnotationShapeWidget extends StatelessWidget {
     required this.shape,
     required this.selected,
     required this.onTap,
+    required this.onDoubleTap,
     required this.onMove,
     required this.onResize,
   });
@@ -32,6 +35,7 @@ class AnnotationShapeWidget extends StatelessWidget {
       top: shape.rect.top,
       child: GestureDetector(
         onTap: onTap,
+        onDoubleTap: onDoubleTap,
 
         // Drag entire shape
         onPanUpdate: (details) {
@@ -143,7 +147,7 @@ class AnnotationShapeWidget extends StatelessWidget {
         child: const SizedBox(
           width: 28,
           height: 28,
-          child: const ResizeHandle(
+          child: ResizeHandle(
             alignment: Alignment.center,
           ),
         ),

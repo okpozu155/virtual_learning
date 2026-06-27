@@ -9,14 +9,11 @@ class QuestionModel {
     required this.correctAnswer,
   });
 
-  factory QuestionModel.fromJson(
-      Map<String, dynamic> json) {
+  factory QuestionModel.fromJson(Map<String, dynamic> json) {
     return QuestionModel(
-      question: json['question'],
-      options:
-      List<String>.from(json['options']),
-      correctAnswer:
-      json['correctAnswer'],
+      question: json['question']?.toString() ?? '',
+      options: List<String>.from(json['options'] ?? []),
+      correctAnswer: (json['correctAnswer'] as num?)?.toInt() ?? 0,
     );
   }
 

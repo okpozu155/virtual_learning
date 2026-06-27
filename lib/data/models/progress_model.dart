@@ -13,10 +13,10 @@ class ProgressModel {
 
   factory ProgressModel.fromJson(Map<String, dynamic> json) {
     return ProgressModel(
-      slidesViewed: json['slidesViewed'],
-      quizzesTaken: json['quizzesTaken'],
-      averageScore: (json['averageScore'] as num).toDouble(),
-      streakDays: json['streakDays'],
+      slidesViewed: (json['slidesViewed'] as num?)?.toInt() ?? 0,
+      quizzesTaken: (json['quizzesTaken'] as num?)?.toInt() ?? 0,
+      averageScore: (json['averageScore'] as num?)?.toDouble() ?? 0,
+      streakDays: (json['streakDays'] as num?)?.toInt() ?? 0,
     );
   }
 

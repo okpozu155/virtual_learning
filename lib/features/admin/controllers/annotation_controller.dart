@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../firebase/firebase_collections.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-
 
 
 class AnnotationController {
@@ -34,6 +32,3 @@ class AnnotationController {
     });
   }
 }
-
-// This automatically connects to your gs:// bucket URL
-//final storageRef = FirebaseStorage.instance.ref();

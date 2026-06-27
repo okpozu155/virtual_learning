@@ -17,52 +17,53 @@ class WelcomePage extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 22.0, vertical: 20.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 20),
+                const SizedBox(height: 8),
                 // Welcome Illustration / Icon Holder
                 Container(
-                  height: 180,
-                  width: 180,
+                  height: 112,
+                  width: 112,
                   decoration: const BoxDecoration(
                     color: skyBlueLight,
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
                     Icons.school_rounded,
-                    size: 90,
+                    size: 58,
                     color: skyBlueDark,
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 22),
 
                 // Main Header
                 const Text(
                   'Welcome to Virtual Learn',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 28,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
 
                 // Subtitle
                 const Text(
                   'Empowering your academic journey anytime, anywhere. Access your virtual MICROSCOPY.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: Colors.black54,
-                    height: 1.5,
+                    height: 1.35,
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 22),
 
                 // Core Features Preview Cards
                 _buildFeatureRow(
@@ -72,7 +73,7 @@ class WelcomePage extends StatelessWidget {
                   iconColor: skyBlueDark,
                   bgColor: skyBlueLight,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
                 _buildFeatureRow(
                   icon: Icons.quiz_rounded,
                   title: 'Track Performance',
@@ -80,12 +81,12 @@ class WelcomePage extends StatelessWidget {
                   iconColor: skyBlueDark,
                   bgColor: skyBlueLight,
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 24),
 
                 // Action Buttons
                 SizedBox(
                   width: double.infinity,
-                  height: 56,
+                  height: 48,
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.pushNamed(
@@ -111,11 +112,11 @@ class WelcomePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
 
                 SizedBox(
                   width: double.infinity,
-                  height: 56,
+                  height: 48,
                   child: OutlinedButton(
                     onPressed: () {
                       Navigator.pushNamed(
@@ -156,7 +157,7 @@ class WelcomePage extends StatelessWidget {
     required Color bgColor,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white54,
         borderRadius: BorderRadius.circular(16),
@@ -165,14 +166,14 @@ class WelcomePage extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(9),
             decoration: BoxDecoration(
               color: bgColor,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: iconColor, size: 28),
+            child: Icon(icon, color: iconColor, size: 24),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,11 +186,11 @@ class WelcomePage extends StatelessWidget {
                     color: Colors.black87,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
                   subtitle,
                   style: const TextStyle(
-                    fontSize: 13,
+                    fontSize: 12,
                     color: Colors.black54,
                   ),
                 ),

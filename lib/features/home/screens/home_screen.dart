@@ -10,6 +10,7 @@ import '../../../message/message_admin_screen.dart';
 import '../../../message/student_bulletin_screen.dart';
 import '../../../message/student_inbox_screen.dart';
 
+import '../../notes/screens/notes_screen.dart';
 import '../../slide_library/screens/library_screen.dart';
 import '../../microscope/screens/microscope_screen.dart';
 import '../../quiz/screens/quiz_screen.dart';
@@ -30,14 +31,12 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-
 class _HomeScreenState extends State<HomeScreen> {
   final SlideRepository _repository = SlideRepository();
 
   List<SlideModel> allSlides = [];
 
   double overallProgress = 0;
-
 
   @override
   void initState() {
@@ -72,8 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> openMicroscope() async {
     final storage = LocalStorageService();
 
-    final slideId =
-    await storage.getLastViewedSlide();
+    final slideId = await storage.getLastViewedSlide();
 
     if (slideId == null) {
       if (!mounted) return;
@@ -97,17 +95,14 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    final slide =
-    await _repository.getSlideById(slideId);
+    final slide = await _repository.getSlideById(slideId);
 
     if (slide == null) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text(
-            'The previously viewed slide could not be found.',
-          ),
+          content: Text('The previously viewed slide could not be found.'),
         ),
       );
 
@@ -118,11 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     await Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => MicroscopeScreen(
-          slide: slide,
-        ),
-      ),
+      MaterialPageRoute(builder: (_) => MicroscopeScreen(slide: slide)),
     );
 
     await loadOverallProgress();
@@ -131,19 +122,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> openLastQuiz() async {
     final storage = LocalStorageService();
 
-    final slideId =
-    await storage.getLastViewedSlide();
+    final slideId = await storage.getLastViewedSlide();
 
     if (slideId == null) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "No slide viewed yet.",
-          ),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("No slide viewed yet.")));
 
       return;
     }
@@ -152,11 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => QuizScreen(
-          slideId: slideId,
-        ),
-      ),
+      MaterialPageRoute(builder: (_) => QuizScreen(slideId: slideId)),
     );
   }
 
@@ -164,9 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
         return SafeArea(
@@ -177,10 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 const Text(
                   "Student Menu",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
 
                 const SizedBox(height: 20),
@@ -194,8 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) =>
-                        const StudentProfileScreen(),
+                        builder: (_) => const StudentProfileScreen(),
                       ),
                     );
                   },
@@ -223,8 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) =>
-                        const StudentBulletinScreen(),
+                        builder: (_) => const StudentBulletinScreen(),
                       ),
                     );
                   },
@@ -246,10 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: const Icon(Icons.admin_panel_settings),
             onPressed: () {
-              Navigator.pushNamed(
-                context,
-                AppRoutes.adminDashboard,
-              );
+              Navigator.pushNamed(context, AppRoutes.adminDashboard);
             },
           ),
         ],
@@ -262,10 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             const Text(
               "Welcome Back 👋",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 8),
@@ -275,16 +244,11 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Color(0xFF239C16),
             ),
 
-
-
             const SizedBox(height: 20),
 
             const Text(
               "Quick Access",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 15),
@@ -292,8 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
             GridView.count(
               crossAxisCount: 2,
               shrinkWrap: true,
-              physics:
-              const NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
               children: [
@@ -304,10 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                        const LibraryScreen(),
-                      ),
+                      MaterialPageRoute(builder: (_) => const LibraryScreen()),
                     );
                   },
                 ),
@@ -327,13 +287,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
 
                 DashboardCard(
-                  title: "Ask AI",
-                  icon: Icons.smart_toy,
-                  color: Colors.orange,
+                  title: "NOTES",
+                  icon: Icons.sticky_note_2,
+                  color: Colors.teal,
                   onTap: () {
-                    Navigator.pushNamed(
+                    Navigator.push(
                       context,
-                      '/ai-tutor',
+                      MaterialPageRoute(builder: (_) => const NotesScreen()),
                     );
                   },
                 ),
@@ -344,24 +304,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
             Card(
               child: ListTile(
-                leading: const Icon(
-                  Icons.local_fire_department,
-                ),
-                title: const Text(
-                  "Recent Topics",
-                ),
-                subtitle: const Text(
-                  "Last 7 slides viewed",
-                ),
-                trailing: const Icon(
-                  Icons.arrow_forward_ios,
-                ),
+                leading: const Icon(Icons.local_fire_department),
+                title: const Text("Recent Topics"),
+                subtitle: const Text("Last 7 slides viewed"),
+                trailing: const Icon(Icons.arrow_forward_ios),
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) =>
-                      const RecentTopicsScreen(),
+                      builder: (_) => const RecentTopicsScreen(),
                     ),
                   );
                 },
@@ -396,8 +347,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) =>
-                        const MessageAdminScreen(),
+                        builder: (_) => const MessageAdminScreen(),
                       ),
                     );
                   },

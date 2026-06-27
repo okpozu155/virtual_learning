@@ -1,39 +1,59 @@
-import 'dart:convert';
-import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/quiz_model.dart';
 
 class QuizRepository {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   Future<List<QuizModel>> getQuizzes() async {
-    final jsonString =
-    await rootBundle.loadString(
-      'assets/data/quizzes.json',
-    );
+    final snapshot = await _firestore.collection('quizzes').get();
 
-    final List<dynamic> data =
-    json.decode(jsonString);
+    final quizzes = <QuizModel>[];
 
-    return data
-        .map(
-          (e) => QuizModel.fromJson(e),
-    )
-        .toList();
-  }
-  Future<QuizModel?> getQuizBySlideId(String slideId) async {
-    final quizzes = await getQuizzes();
+    for (final doc in snapshot.docs) {
+      final quiz = await _quizFromDocument(doc);
 
-    print("Looking for quiz with slideId: $slideId");
-
-    for (final quiz in quizzes) {
-      print("Quiz found: ${quiz.slideId}");
+      if (quiz.questions.isNotEmpty) {
+        quizzes.add(quiz);
+      }
     }
 
-    try {
-      return quizzes.firstWhere(
-            (quiz) => quiz.slideId == slideId,
-      );
-    } catch (_) {
-      print("NO MATCH FOUND");
+    return quizzes;
+  }
+
+  Future<QuizModel?> getQuizBySlideId(String slideId) async {
+    final doc = await _firestore.collection('quizzes').doc(slideId).get();
+
+    if (!doc.exists) {
       return null;
     }
-  }}
+
+    final quiz = await _quizFromDocument(doc);
+
+    if (quiz.questions.isEmpty) {
+      return null;
+    }
+
+    return quiz;
+  }
+
+  Future<QuizModel> _quizFromDocument(
+    DocumentSnapshot<Map<String, dynamic>> doc,
+  ) async {
+    final data = doc.data() ?? {};
+    final questionsSnapshot = await doc.reference
+        .collection('questions')
+        .orderBy('createdAt')
+        .get();
+
+    final questions = questionsSnapshot.docs
+        .map((questionDoc) => questionDoc.data())
+        .toList();
+
+    return QuizModel.fromJson({
+      'slideId': data['slideId'] ?? doc.id,
+      'title': data['title'] ?? 'Quiz',
+      'questions': questions,
+    });
+  }
+}

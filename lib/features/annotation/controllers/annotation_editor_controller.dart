@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../data/repositories/annotation_repository.dart';
@@ -13,6 +15,8 @@ class AnnotationEditorController extends ChangeNotifier {
   bool placingShape = false;
 
   AnnotationShapeType? placingType;
+
+  StreamSubscription<List<AnnotationShape>>? _shapesSubscription;
 
   bool get hasSelection => selectedShape != null;
 
@@ -37,12 +41,27 @@ class AnnotationEditorController extends ChangeNotifier {
   //====================================================
 
   void startRealtimeSync(String slideId) {
-    _repository.streamShapes(slideId).listen((loaded) {
+    _shapesSubscription?.cancel();
+
+    _shapesSubscription = _repository.streamShapes(slideId).listen((loaded) {
+      final selectedId = selectedShape?.id;
+
       shapes
         ..clear()
         ..addAll(loaded);
 
       selectedShape = null;
+
+      if (selectedId != null) {
+        for (final shape in shapes) {
+          if (shape.id == selectedId) {
+            shape.selected = true;
+            selectedShape = shape;
+          } else {
+            shape.selected = false;
+          }
+        }
+      }
 
       notifyListeners();
     });
@@ -68,18 +87,13 @@ class AnnotationEditorController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> placeShape({
+  Future<AnnotationShape?> placeShape({
     required String slideId,
     required Offset position,
   }) async {
     if (!placingShape || placingType == null) {
-      return;
+      return null;
     }
-
-    print("PLACE SHAPE");
-    print("Slide = $slideId");
-    print("Position = $position");
-
 
     final shape = AnnotationShape(
       type: placingType!,
@@ -102,6 +116,8 @@ class AnnotationEditorController extends ChangeNotifier {
       slideId: slideId,
       shape: shape,
     );
+
+    return shape;
   }
 
   //====================================================
@@ -268,7 +284,7 @@ class AnnotationEditorController extends ChangeNotifier {
 
     final id = selectedShape!.id;
 
-    shapes.remove(selectedShape);
+    shapes.removeWhere((shape) => shape.id == id);
 
     selectedShape = null;
 
@@ -294,5 +310,11 @@ class AnnotationEditorController extends ChangeNotifier {
     placingType = null;
 
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _shapesSubscription?.cancel();
+    super.dispose();
   }
 }

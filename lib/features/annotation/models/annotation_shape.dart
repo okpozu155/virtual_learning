@@ -114,7 +114,7 @@ class AnnotationShape {
       "description": description,
       "notes": notes,
       "rotation": rotation,
-      "color": color.value,
+      "color": color.toARGB32(),
       "points": polygonPoints()
           .map(
             (p) => {
@@ -176,7 +176,7 @@ class AnnotationShape {
       width: maxX - minX,
       height: maxY - minY,
       rotation: (json["rotation"] ?? 0).toDouble(),
-      color: Color(json["color"] ?? Colors.red.value),
+      color: Color(json["color"] ?? Colors.red.toARGB32()),
       title: json["title"] ?? '',
       description: json["description"] ?? '',
       notes: json["notes"] ?? '',

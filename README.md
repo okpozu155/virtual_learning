@@ -97,7 +97,7 @@ Students can access:
 - Slide Library
 - Virtual Microscope
 - Quizzes
-- AI Tutor
+- Notes
 - Downloaded Slides
 
 ---
@@ -160,7 +160,17 @@ Administrators can:
 
 - Create annotations
 - Edit annotations
+- Duplicate annotations
 - Delete annotations
+- Add titles, descriptions, notes, and colors through the annotation details dialog
+
+Annotations are saved in Cloud Firestore under each slide document:
+
+```text
+slides/{slideId}/annotations/{annotationId}
+```
+
+The annotation designer supports realtime loading, selection, resizing, duplication, deletion, and detail updates for saved annotation shapes.
 
 ---
 
@@ -173,6 +183,32 @@ Students can:
 - Launch quizzes
 - Answer questions
 - Evaluate understanding of observed specimens
+
+Quizzes now load from Cloud Firestore instead of the local JSON asset. Quiz content is stored by slide:
+
+```text
+quizzes/{slideId}/questions/{questionId}
+```
+
+Each question stores the question text, answer options, and the correct answer index.
+
+---
+
+## Notes System
+
+The previous dashboard AI entry point has been replaced with a Notes notebook.
+
+Students can:
+
+- Open NOTES from the dashboard
+- Create notes
+- Edit saved notes
+- Delete notes
+- View an auto-generated date panel
+- Select a note topic from available slide names
+- Enter a custom topic when the note is not tied to a slide
+
+Notes are saved locally per user using SharedPreferences, making them available on the same device without requiring a network connection.
 
 ---
 
@@ -190,14 +226,7 @@ Students can:
 
 ## AI Tutor Integration
 
-An AI Tutor entry point has been integrated into the platform.
-
-Planned functionality includes:
-
-- Question answering
-- Specimen explanations
-- Learning assistance
-- Interactive tutoring
+AI tutoring remains a planned enhancement for future versions. The former dashboard AI shortcut is currently used for the student Notes notebook.
 
 ---
 
@@ -258,6 +287,8 @@ Stores:
 - Hotspots
 - Annotations
 - Quiz content
+- Student profile data
+- Progress summaries
 
 ---
 
@@ -278,6 +309,9 @@ Used for:
 
 - Offline slide viewing
 - Cached educational resources
+- Student notes
+- Last viewed slide history
+- Local quiz progress cache
 
 ---
 
@@ -388,6 +422,18 @@ The following functionality has been tested:
 - Polygon annotation creation
 - Annotation retrieval
 - Annotation display
+- Annotation duplication
+- Annotation deletion
+- Annotation detail editing
+
+## Notes System
+
+- Note creation
+- Note editing
+- Note deletion
+- Date panel display
+- Slide-topic selection
+- Custom topic entry
 
 ## Offline Features
 
@@ -406,6 +452,8 @@ Successfully implemented:
 - Annotation system
 - Polygon annotations
 - Quiz integration
+- Firestore-backed quiz loading
+- Notes notebook
 - Offline slide support
 - Firebase integration
 - Modular architecture
@@ -491,13 +539,6 @@ Version control has been used to:
 
 Virtual Learning demonstrates the feasibility of providing practical science education through virtual laboratory experiences.
 
-The platform successfully combines virtual microscopy, offline learning, interactive annotations, assessments, student-teacher engagment and cloud-based services into a single educational solution. Future development will focus on AI-assisted learning, collaborative educational tools, and large-scale deployment capabilities.
+The platform successfully combines virtual microscopy, offline learning, interactive annotations, notes, assessments, student-teacher engagment and cloud-based services into a single educational solution. Future development will focus on AI-assisted learning, collaborative educational tools, and large-scale deployment capabilities.
 
-
-
-
-<<<<<<< HEAD
-** Future development
-=======
-** Future development
->>>>>>> 4f182fb (Updated and Fixed the Polygon Annotation)
+**Future development**

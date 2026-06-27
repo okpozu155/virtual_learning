@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../core/utils/validators.dart';
-import 'login_screen.dart';
+import '../../../core/routes/app_routes.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -15,8 +15,6 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  final _formKey = GlobalKey<FormState>();
-
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -24,8 +22,8 @@ class _SignupPageState extends State<SignupPage> {
 
   bool loading = false;
 
-  Future<void> signUp() async {
-    if (!_formKey.currentState!.validate()) {
+  Future<void> signUp(BuildContext formContext) async {
+    if (!Form.of(formContext).validate()) {
       return;
     }
 
@@ -80,11 +78,9 @@ class _SignupPageState extends State<SignupPage> {
         ),
       );
 
-      Navigator.pushReplacement(
+      Navigator.pushReplacementNamed(
         context,
-        MaterialPageRoute(
-          builder: (_) => const LoginPage(),
-        ),
+        AppRoutes.login,
       );
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -140,9 +136,10 @@ class _SignupPageState extends State<SignupPage> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(22),
         child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
+          child: Builder(
+            builder: (formContext) {
+              return Column(
+                children: [
               const SizedBox(height: 20),
 
               buildField(
@@ -187,9 +184,9 @@ class _SignupPageState extends State<SignupPage> {
 
               SizedBox(
                 width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: loading ? null : signUp,
+                  height: 55,
+                  child: ElevatedButton(
+                  onPressed: loading ? null : () => signUp(formContext),
                   child: loading
                       ? const CircularProgressIndicator()
                       : const Text("Sign Up"),
@@ -207,12 +204,9 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacementNamed(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) =>
-                          const LoginPage(),
-                        ),
+                        AppRoutes.login,
                       );
                     },
                     child: const Text(
@@ -221,7 +215,9 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ],
               ),
-            ],
+                ],
+              );
+            },
           ),
         ),
       ),

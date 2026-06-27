@@ -4,46 +4,40 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class AddQuestionScreen extends StatefulWidget {
   final String slideId;
 
-  const AddQuestionScreen({
-    super.key,
-    required this.slideId,
-  });
+  const AddQuestionScreen({super.key, required this.slideId});
 
   @override
-  State<AddQuestionScreen> createState() =>
-      _AddQuestionScreenState();
+  State<AddQuestionScreen> createState() => _AddQuestionScreenState();
 }
 
-class _AddQuestionScreenState
-    extends State<AddQuestionScreen> {
-  final questionController =
-  TextEditingController();
+class _AddQuestionScreenState extends State<AddQuestionScreen> {
+  final questionController = TextEditingController();
 
-  final optionA =
-  TextEditingController();
+  final optionA = TextEditingController();
 
-  final optionB =
-  TextEditingController();
+  final optionB = TextEditingController();
 
-  final optionC =
-  TextEditingController();
+  final optionC = TextEditingController();
 
-  final optionD =
-  TextEditingController();
+  final optionD = TextEditingController();
 
-  final explanationController =
-  TextEditingController();
+  final explanationController = TextEditingController();
 
   int correctAnswer = 0;
 
   Future<void> saveQuestion() async {
-    await FirebaseFirestore.instance
+    final quizRef = FirebaseFirestore.instance
         .collection('quizzes')
-        .doc(widget.slideId)
-        .collection('questions')
-        .add({
-      'question':
-      questionController.text.trim(),
+        .doc(widget.slideId);
+
+    await quizRef.set({
+      'slideId': widget.slideId,
+      'title': 'Quiz',
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+
+    await quizRef.collection('questions').add({
+      'question': questionController.text.trim(),
 
       'options': [
         optionA.text.trim(),
@@ -52,14 +46,11 @@ class _AddQuestionScreenState
         optionD.text.trim(),
       ],
 
-      'correctAnswer':
-      correctAnswer,
+      'correctAnswer': correctAnswer,
 
-      'explanation':
-      explanationController.text.trim(),
+      'explanation': explanationController.text.trim(),
 
-      'createdAt':
-      FieldValue.serverTimestamp(),
+      'createdAt': FieldValue.serverTimestamp(),
     });
 
     if (mounted) {
@@ -67,20 +58,14 @@ class _AddQuestionScreenState
     }
   }
 
-  Widget buildField(
-      String label,
-      TextEditingController c) {
+  Widget buildField(String label, TextEditingController c) {
     return Padding(
-      padding:
-      const EdgeInsets.symmetric(
-        vertical: 8,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: TextField(
         controller: c,
         decoration: InputDecoration(
           labelText: label,
-          border:
-          const OutlineInputBorder(),
+          border: const OutlineInputBorder(),
         ),
       ),
     );
@@ -89,87 +74,46 @@ class _AddQuestionScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-      AppBar(title: const Text(
-        "Add Question",
-      )),
+      appBar: AppBar(title: const Text("Add Question")),
       body: SingleChildScrollView(
-        padding:
-        const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            buildField(
-              "Question",
-              questionController,
-            ),
+            buildField("Question", questionController),
 
-            buildField(
-              "Option A",
-              optionA,
-            ),
+            buildField("Option A", optionA),
 
-            buildField(
-              "Option B",
-              optionB,
-            ),
+            buildField("Option B", optionB),
 
-            buildField(
-              "Option C",
-              optionC,
-            ),
+            buildField("Option C", optionC),
 
-            buildField(
-              "Option D",
-              optionD,
-            ),
+            buildField("Option D", optionD),
 
             DropdownButtonFormField<int>(
-              value: correctAnswer,
-              decoration:
-              const InputDecoration(
-                labelText:
-                "Correct Answer",
-              ),
+              initialValue: correctAnswer,
+              decoration: const InputDecoration(labelText: "Correct Answer"),
               items: const [
-                DropdownMenuItem(
-                  value: 0,
-                  child: Text("A"),
-                ),
-                DropdownMenuItem(
-                  value: 1,
-                  child: Text("B"),
-                ),
-                DropdownMenuItem(
-                  value: 2,
-                  child: Text("C"),
-                ),
-                DropdownMenuItem(
-                  value: 3,
-                  child: Text("D"),
-                ),
+                DropdownMenuItem(value: 0, child: Text("A")),
+                DropdownMenuItem(value: 1, child: Text("B")),
+                DropdownMenuItem(value: 2, child: Text("C")),
+                DropdownMenuItem(value: 3, child: Text("D")),
               ],
               onChanged: (value) {
                 setState(() {
-                  correctAnswer =
-                      value ?? 0;
+                  correctAnswer = value ?? 0;
                 });
               },
             ),
 
             const SizedBox(height: 16),
 
-            buildField(
-              "Explanation",
-              explanationController,
-            ),
+            buildField("Explanation", explanationController),
 
             const SizedBox(height: 20),
 
             ElevatedButton(
               onPressed: saveQuestion,
-              child: const Text(
-                "Save Question",
-              ),
+              child: const Text("Save Question"),
             ),
           ],
         ),

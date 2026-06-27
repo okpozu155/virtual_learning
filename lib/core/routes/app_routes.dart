@@ -13,6 +13,7 @@ import '../../features/slide_library/screens/library_screen.dart';
 import '../../features/authentication/screens/authentication_guard_screen.dart';
 import '../../features/ai_tutor/screens/ai_tutor_screen.dart';
 import '../../features/hotspot_notes/screens/hotspot_info_screen.dart';
+import '../../features/notes/screens/notes_screen.dart';
 
 import '../../features/admin/screens/admin_dashboard_screen.dart';
 import '../../features/admin/screens/slide_management_screen.dart';
@@ -32,6 +33,7 @@ class AppRoutes {
   static const String progress = "/progress";
   static const String library = "/library";
   static const String ask_ai = "/AI_Tutor";
+  static const String notes = "/notes";
   static const String hotspotInfo = "/hotspot-info";
 
   static const String adminDashboard = "/admin-dashboard";
@@ -58,13 +60,13 @@ class AppRoutes {
 
     library: (context) => const LibraryScreen(),
 
+    notes: (context) => const NotesScreen(),
+
     hotspotInfo: (context) => const HotspotInfoScreen(),
 
-    adminDashboard: (context) =>
-    const AdminDashboardScreen(),  // AdminGuard(),
+    adminDashboard: (context) => const AdminDashboardScreen(), // AdminGuard(),
 
-    slideManagement: (context) =>
-    const SlideManagementScreen(),
+    slideManagement: (context) => const SlideManagementScreen(),
 
     ask_ai: (context) => const ComingSoonPages(),
 

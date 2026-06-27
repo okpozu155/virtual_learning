@@ -8,28 +8,36 @@ class AnnotationCanvas extends StatelessWidget {
   final AnnotationEditorController controller;
   final String slideId;
   final String imageUrl;
+  final Future<void> Function()? onShapePlaced;
+  final Future<void> Function(AnnotationShape shape)? onShapeEdit;
 
   const AnnotationCanvas({
     super.key,
     required this.controller,
     required this.slideId,
     required this.imageUrl,
+    this.onShapePlaced,
+    this.onShapeEdit,
   });
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: controller,
-      builder: (_, __) {
+      builder: (_, _) {
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
 
           onTapUp: (details) async {
             if (controller.placingShape) {
-              await controller.placeShape(
+              final shape = await controller.placeShape(
                 slideId: slideId,
                 position: details.localPosition,
               );
+
+              if (shape != null) {
+                await onShapePlaced?.call();
+              }
             } else {
               controller.clearSelection();
             }
@@ -63,6 +71,11 @@ class AnnotationCanvas extends StatelessWidget {
 
                       onTap: () {
                         controller.selectShape(shape);
+                      },
+
+                      onDoubleTap: () async {
+                        controller.selectShape(shape);
+                        await onShapeEdit?.call(shape);
                       },
 
                       onMove: (delta) async {
