@@ -7,7 +7,7 @@ import '../../annotation/screens/annotation_designer_screen.dart';
 import '../../../data/repositories/cloudinary_repository.dart';
 import '../../../data/repositories/slide_repository.dart';
 
-import '../../annotation/screens/annotation_designer_screen.dart';
+
 
 class SlideManagementScreen extends StatefulWidget {
   const SlideManagementScreen({super.key});

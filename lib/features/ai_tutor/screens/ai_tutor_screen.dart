@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
-import '../../../core/routes/app_routes.dart';
+
+import '../../../core/theme/character_animation.dart';
 
 class ComingSoonPages extends StatelessWidget {
   const ComingSoonPages({super.key});
@@ -8,35 +8,11 @@ class ComingSoonPages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Coming Soon'),
-      ),
-      body: Center(
-        child: Container(
-          width: 300,
-          height: 450,
-          decoration: BoxDecoration(
-            color: Colors.blue.shade300,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 8,
-                offset: Offset(0, 4),
-              ),
-            ],
-          ),
-          child: const Center(
-            child: Text(
-              'COMING SOON...',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                letterSpacing: 2,
-              ),
-            ),
-          ),
+      appBar: AppBar(title: const Text('Ask AI')),
+      body: const Center(
+        child: CharacterAnimation(
+          text: 'COMING SOON',
+          color: Color(0xFF239C16),
         ),
       ),
     );
@@ -99,7 +75,7 @@ class _AiTutorScreenState
             message: response,
             isUser: false,
           ),
-        );
+        ),
       });
     } catch (e) {
       setState(() {

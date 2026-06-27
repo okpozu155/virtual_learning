@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
-enum AnnotationShapeType {
-  rectangle,
-  octagon,
-}
+enum AnnotationShapeType { rectangle, octagon }
 
 class AnnotationShape {
   final String id;
@@ -43,12 +40,14 @@ class AnnotationShape {
     this.notes = '',
   }) : id = id ?? const Uuid().v4();
 
+  bool get hasRequiredDetails =>
+      title.trim().isNotEmpty && description.trim().isNotEmpty;
+
+  bool get fixed => hasRequiredDetails;
+
   /// Rectangle occupied by this shape
-  Rect get rect => Rect.fromCenter(
-    center: center,
-    width: width,
-    height: height,
-  );
+  Rect get rect =>
+      Rect.fromCenter(center: center, width: width, height: height);
 
   /// Duplicate shape with a small offset
   AnnotationShape clone() {
@@ -115,22 +114,12 @@ class AnnotationShape {
       "notes": notes,
       "rotation": rotation,
       "color": color.toARGB32(),
-      "points": polygonPoints()
-          .map(
-            (p) => {
-          "x": p.dx,
-          "y": p.dy,
-        },
-      )
-          .toList(),
+      "points": polygonPoints().map((p) => {"x": p.dx, "y": p.dy}).toList(),
     };
   }
 
   /// Firestore deserialization
-  factory AnnotationShape.fromFirestore(
-      String id,
-      Map<String, dynamic> json,
-      ) {
+  factory AnnotationShape.fromFirestore(String id, Map<String, dynamic> json) {
     final pointList = (json["points"] as List<dynamic>? ?? []);
 
     if (pointList.isEmpty) {
@@ -145,11 +134,8 @@ class AnnotationShape {
 
     final points = pointList
         .map(
-          (e) => Offset(
-        (e["x"] as num).toDouble(),
-        (e["y"] as num).toDouble(),
-      ),
-    )
+          (e) => Offset((e["x"] as num).toDouble(), (e["y"] as num).toDouble()),
+        )
         .toList();
 
     double minX = points.first.dx;
@@ -169,10 +155,7 @@ class AnnotationShape {
       type: json["shape"] == "octagon"
           ? AnnotationShapeType.octagon
           : AnnotationShapeType.rectangle,
-      center: Offset(
-        (minX + maxX) / 2,
-        (minY + maxY) / 2,
-      ),
+      center: Offset((minX + maxX) / 2, (minY + maxY) / 2),
       width: maxX - minX,
       height: maxY - minY,
       rotation: (json["rotation"] ?? 0).toDouble(),

@@ -12,6 +12,7 @@ import '../../../data/repositories/annotation_repository.dart';
 
 import '../../../features/quiz/screens/quiz_screen.dart';
 
+import '../../../core/routes/app_routes.dart';
 import '../../../core/services/offline_slide_service.dart';
 import '../../../core/services/local_storage_service.dart';
 import '../../../core/services/progress_service.dart';
@@ -104,7 +105,7 @@ class _MicroscopeScreenState extends State<MicroscopeScreen> {
   }
 
   void _openAITutor() {
-    Navigator.pushNamed(context, '/ai-tutor');
+    Navigator.pushNamed(context, AppRoutes.askAi);
   }
 
   @override

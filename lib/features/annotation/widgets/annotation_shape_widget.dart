@@ -38,9 +38,11 @@ class AnnotationShapeWidget extends StatelessWidget {
         onDoubleTap: onDoubleTap,
 
         // Drag entire shape
-        onPanUpdate: (details) {
-          onMove(details.delta);
-        },
+        onPanUpdate: shape.fixed
+            ? null
+            : (details) {
+                onMove(details.delta);
+              },
 
         child: Transform.rotate(
           angle: shape.rotation,
@@ -50,80 +52,48 @@ class AnnotationShapeWidget extends StatelessWidget {
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-
                 //-----------------------------------------
                 // Shape
                 //-----------------------------------------
-
                 Positioned.fill(
                   child: CustomPaint(
-                    painter: shape.type ==
-                        AnnotationShapeType.rectangle
+                    painter: shape.type == AnnotationShapeType.rectangle
                         ? RectanglePainter(
-                      color: shape.color,
-                      selected: selected,
-                    )
+                            color: shape.color,
+                            selected: selected,
+                          )
                         : OctagonPainter(
-                      color: shape.color,
-                      selected: selected,
-                    ),
+                            color: shape.color,
+                            selected: selected,
+                          ),
                   ),
                 ),
 
                 //-----------------------------------------
                 // Resize Handles
                 //-----------------------------------------
+                if (selected && !shape.fixed) ...[
+                  _handle(Alignment.topLeft, (delta) {
+                    onMove(delta);
 
-                if (selected) ...[
-                  _handle(
-                    Alignment.topLeft,
-                        (delta) {
-                      onMove(delta);
+                    onResize(shape.width - delta.dx, shape.height - delta.dy);
+                  }),
 
-                      onResize(
-                        shape.width - delta.dx,
-                        shape.height - delta.dy,
-                      );
-                    },
-                  ),
+                  _handle(Alignment.topRight, (delta) {
+                    onMove(Offset(0, delta.dy));
 
-                  _handle(
-                    Alignment.topRight,
-                        (delta) {
-                      onMove(
-                        Offset(0, delta.dy),
-                      );
+                    onResize(shape.width + delta.dx, shape.height - delta.dy);
+                  }),
 
-                      onResize(
-                        shape.width + delta.dx,
-                        shape.height - delta.dy,
-                      );
-                    },
-                  ),
+                  _handle(Alignment.bottomLeft, (delta) {
+                    onMove(Offset(delta.dx, 0));
 
-                  _handle(
-                    Alignment.bottomLeft,
-                        (delta) {
-                      onMove(
-                        Offset(delta.dx, 0),
-                      );
+                    onResize(shape.width - delta.dx, shape.height + delta.dy);
+                  }),
 
-                      onResize(
-                        shape.width - delta.dx,
-                        shape.height + delta.dy,
-                      );
-                    },
-                  ),
-
-                  _handle(
-                    Alignment.bottomRight,
-                        (delta) {
-                      onResize(
-                        shape.width + delta.dx,
-                        shape.height + delta.dy,
-                      );
-                    },
-                  ),
+                  _handle(Alignment.bottomRight, (delta) {
+                    onResize(shape.width + delta.dx, shape.height + delta.dy);
+                  }),
                 ],
               ],
             ),
@@ -133,10 +103,7 @@ class AnnotationShapeWidget extends StatelessWidget {
     );
   }
 
-  Widget _handle(
-      Alignment alignment,
-      ValueChanged<Offset> drag,
-      ) {
+  Widget _handle(Alignment alignment, ValueChanged<Offset> drag) {
     return Align(
       alignment: alignment,
       child: GestureDetector(
@@ -147,9 +114,7 @@ class AnnotationShapeWidget extends StatelessWidget {
         child: const SizedBox(
           width: 28,
           height: 28,
-          child: ResizeHandle(
-            alignment: Alignment.center,
-          ),
+          child: ResizeHandle(alignment: Alignment.center),
         ),
       ),
     );

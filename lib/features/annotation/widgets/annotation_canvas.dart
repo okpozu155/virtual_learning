@@ -53,56 +53,45 @@ class AnnotationCanvas extends StatelessWidget {
                 //-------------------------------------------------
                 // Slide Image
                 //-------------------------------------------------
-
-                Image.network(
-                  imageUrl,
-                  fit: BoxFit.contain,
-                ),
+                Image.network(imageUrl, fit: BoxFit.contain),
 
                 //-------------------------------------------------
                 // Annotation Shapes
                 //-------------------------------------------------
+                ...controller.shapes.map((AnnotationShape shape) {
+                  return AnnotationShapeWidget(
+                    shape: shape,
+                    selected: shape.selected,
 
-                ...controller.shapes.map(
-                      (AnnotationShape shape) {
-                    return AnnotationShapeWidget(
-                      shape: shape,
-                      selected: shape.selected,
+                    onTap: () {
+                      controller.selectShape(shape);
+                    },
 
-                      onTap: () {
-                        controller.selectShape(shape);
-                      },
+                    onDoubleTap: () async {
+                      controller.selectShape(shape);
+                      await onShapeEdit?.call(shape);
+                    },
 
-                      onDoubleTap: () async {
-                        controller.selectShape(shape);
-                        await onShapeEdit?.call(shape);
-                      },
+                    onMove: (delta) async {
+                      await controller.moveSelected(
+                        slideId: slideId,
+                        delta: delta,
+                      );
+                    },
 
-                      onMove: (delta) async {
-                        await controller.moveSelected(
-                          slideId: slideId,
-                          delta: delta,
-                        );
-                      },
-
-                      onResize: (
-                          width,
-                          height,
-                          ) async {
-                        await controller.resizeSelected(
-                          slideId: slideId,
-                          width: width,
-                          height: height,
-                        );
-                      },
-                    );
-                  },
-                ),
+                    onResize: (width, height) async {
+                      await controller.resizeSelected(
+                        slideId: slideId,
+                        width: width,
+                        height: height,
+                      );
+                    },
+                  );
+                }),
 
                 //-------------------------------------------------
                 // Placement Hint
                 //-------------------------------------------------
-
                 if (controller.placingShape)
                   Positioned(
                     left: 20,
@@ -115,9 +104,7 @@ class AnnotationCanvas extends StatelessWidget {
                         child: Text(
                           "Tap anywhere to place the ${controller.placingType!.name}.",
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ),
                     ),

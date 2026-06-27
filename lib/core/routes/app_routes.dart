@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:virtual_learning/data/repositories/ai_repository.dart';
-
 import '../../features/onboarding/screens/splash_screen.dart';
 import '../../features/onboarding/screens/welcome_screen.dart';
 import '../../features/authentication/screens/login_screen.dart';
@@ -15,7 +13,6 @@ import '../../features/ai_tutor/screens/ai_tutor_screen.dart';
 import '../../features/hotspot_notes/screens/hotspot_info_screen.dart';
 import '../../features/notes/screens/notes_screen.dart';
 
-import '../../features/admin/screens/admin_dashboard_screen.dart';
 import '../../features/admin/screens/slide_management_screen.dart';
 
 // ONLY import these if the files actually exist
@@ -32,7 +29,7 @@ class AppRoutes {
   static const String profile = "/profile";
   static const String progress = "/progress";
   static const String library = "/library";
-  static const String ask_ai = "/AI_Tutor";
+  static const String askAi = "/AI_Tutor";
   static const String notes = "/notes";
   static const String hotspotInfo = "/hotspot-info";
 
@@ -64,11 +61,11 @@ class AppRoutes {
 
     hotspotInfo: (context) => const HotspotInfoScreen(),
 
-    adminDashboard: (context) => const AdminDashboardScreen(), // AdminGuard(),
+    adminDashboard: (context) => const AdminGuard(),
 
     slideManagement: (context) => const SlideManagementScreen(),
 
-    ask_ai: (context) => const ComingSoonPages(),
+    askAi: (context) => const ComingSoonPages(),
 
     // Uncomment only if screens exist
 

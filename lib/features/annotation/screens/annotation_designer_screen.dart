@@ -20,10 +20,8 @@ class AnnotationDesignerScreen extends StatefulWidget {
       _AnnotationDesignerScreenState();
 }
 
-class _AnnotationDesignerScreenState
-    extends State<AnnotationDesignerScreen> {
-  final AnnotationEditorController controller =
-  AnnotationEditorController();
+class _AnnotationDesignerScreenState extends State<AnnotationDesignerScreen> {
+  final AnnotationEditorController controller = AnnotationEditorController();
 
   bool loading = true;
 
@@ -36,9 +34,9 @@ class _AnnotationDesignerScreenState
   Future<void> _initialize() async {
     await controller.loadShapes(widget.slideId);
 
-    controller.startRealtimeSync(widget.slideId);
-
     if (!mounted) return;
+
+    controller.startRealtimeSync(widget.slideId);
 
     setState(() {
       loading = false;
@@ -46,56 +44,41 @@ class _AnnotationDesignerScreenState
   }
 
   Future<void> _addShape() async {
-    final AnnotationShapeType? type =
-    await showDialog<AnnotationShapeType>(
+    final AnnotationShapeType? type = await showDialog<AnnotationShapeType>(
       context: context,
       builder: (_) => const ShapePickerDialog(),
     );
 
-    if (type == null) return;
+    if (!mounted || type == null) return;
 
     controller.beginPlacement(type);
 
-    if (!mounted) return;
-
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          "Tap anywhere on the slide to place a ${type.name}.",
-        ),
+        content: Text("Tap anywhere on the slide to place a ${type.name}."),
       ),
     );
   }
 
   Future<void> _duplicateShape() async {
-    await controller.duplicateSelected(
-      widget.slideId,
-    );
+    await controller.duplicateSelected(widget.slideId);
   }
 
   Future<void> _editSelectedShape() async {
     final shape = controller.selectedShape;
 
     if (shape == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Select a shape first.",
-          ),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Select a shape first.")));
       return;
     }
 
-    final titleController = TextEditingController(
-      text: shape.title,
-    );
+    final titleController = TextEditingController(text: shape.title);
     final descriptionController = TextEditingController(
       text: shape.description,
     );
-    final notesController = TextEditingController(
-      text: shape.notes,
-    );
+    final notesController = TextEditingController(text: shape.notes);
 
     final colors = <Color>[
       Colors.red,
@@ -120,23 +103,17 @@ class _AnnotationDesignerScreenState
                 children: [
                   TextField(
                     controller: titleController,
-                    decoration: const InputDecoration(
-                      labelText: "Title",
-                    ),
+                    decoration: const InputDecoration(labelText: "Name"),
                   ),
                   TextField(
                     controller: descriptionController,
-                    decoration: const InputDecoration(
-                      labelText: "Description",
-                    ),
+                    decoration: const InputDecoration(labelText: "Description"),
                     minLines: 2,
                     maxLines: 4,
                   ),
                   TextField(
                     controller: notesController,
-                    decoration: const InputDecoration(
-                      labelText: "Notes",
-                    ),
+                    decoration: const InputDecoration(labelText: "Notes"),
                     minLines: 2,
                     maxLines: 4,
                   ),
@@ -189,6 +166,13 @@ class _AnnotationDesignerScreenState
       ),
     );
 
+    if (!mounted) {
+      titleController.dispose();
+      descriptionController.dispose();
+      notesController.dispose();
+      return;
+    }
+
     final title = titleController.text.trim();
     final description = descriptionController.text.trim();
     final notes = notesController.text.trim();
@@ -199,6 +183,17 @@ class _AnnotationDesignerScreenState
 
     if (saved != true) return;
 
+    if (title.isEmpty || description.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Enter a name and description to fix this annotation in place.",
+          ),
+        ),
+      );
+      return;
+    }
+
     await controller.updateShapeDetails(
       slideId: widget.slideId,
       title: title,
@@ -208,15 +203,23 @@ class _AnnotationDesignerScreenState
     );
   }
 
+  Future<void> _showPlacementReadyMessage() async {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          "Drag the annotation into position, then add its name and description to fix it.",
+        ),
+      ),
+    );
+  }
+
   Future<void> _deleteShape() async {
     if (!controller.hasSelection) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Select a shape first.",
-          ),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Select a shape first.")));
       return;
     }
 
@@ -224,9 +227,7 @@ class _AnnotationDesignerScreenState
       context: context,
       builder: (_) => AlertDialog(
         title: const Text("Delete Shape"),
-        content: const Text(
-          "Delete the selected annotation?",
-        ),
+        content: const Text("Delete the selected annotation?"),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -240,10 +241,10 @@ class _AnnotationDesignerScreenState
       ),
     );
 
+    if (!mounted) return;
+
     if (confirm == true) {
-      await controller.deleteSelected(
-        widget.slideId,
-      );
+      await controller.deleteSelected(widget.slideId);
     }
   }
 
@@ -273,9 +274,7 @@ class _AnnotationDesignerScreenState
                   IconButton(
                     tooltip: "Duplicate",
                     icon: const Icon(Icons.copy),
-                    onPressed: controller.hasSelection
-                        ? _duplicateShape
-                        : null,
+                    onPressed: controller.hasSelection ? _duplicateShape : null,
                   ),
                   IconButton(
                     tooltip: "Edit Details",
@@ -287,9 +286,7 @@ class _AnnotationDesignerScreenState
                   IconButton(
                     tooltip: "Delete",
                     icon: const Icon(Icons.delete),
-                    onPressed: controller.hasSelection
-                        ? _deleteShape
-                        : null,
+                    onPressed: controller.hasSelection ? _deleteShape : null,
                   ),
                 ],
               );
@@ -298,16 +295,14 @@ class _AnnotationDesignerScreenState
         ],
       ),
       body: loading
-          ? const Center(
-        child: CircularProgressIndicator(),
-      )
+          ? const Center(child: CircularProgressIndicator())
           : AnnotationCanvas(
-        controller: controller,
-        slideId: widget.slideId,
-        imageUrl: widget.imageUrl,
-        onShapePlaced: _editSelectedShape,
-        onShapeEdit: (_) => _editSelectedShape(),
-      ),
+              controller: controller,
+              slideId: widget.slideId,
+              imageUrl: widget.imageUrl,
+              onShapePlaced: _showPlacementReadyMessage,
+              onShapeEdit: (_) => _editSelectedShape(),
+            ),
     );
   }
 }

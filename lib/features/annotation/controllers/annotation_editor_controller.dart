@@ -18,7 +18,15 @@ class AnnotationEditorController extends ChangeNotifier {
 
   StreamSubscription<List<AnnotationShape>>? _shapesSubscription;
 
+  bool _disposed = false;
+
   bool get hasSelection => selectedShape != null;
+
+  void _notifyListeners() {
+    if (_disposed) return;
+
+    notifyListeners();
+  }
 
   //====================================================
   // LOAD
@@ -33,7 +41,7 @@ class AnnotationEditorController extends ChangeNotifier {
 
     selectedShape = null;
 
-    notifyListeners();
+    _notifyListeners();
   }
 
   //====================================================
@@ -63,7 +71,7 @@ class AnnotationEditorController extends ChangeNotifier {
         }
       }
 
-      notifyListeners();
+      _notifyListeners();
     });
   }
 
@@ -77,14 +85,14 @@ class AnnotationEditorController extends ChangeNotifier {
 
     clearSelection(notify: false);
 
-    notifyListeners();
+    _notifyListeners();
   }
 
   void cancelPlacement() {
     placingShape = false;
     placingType = null;
 
-    notifyListeners();
+    _notifyListeners();
   }
 
   Future<AnnotationShape?> placeShape({
@@ -110,12 +118,9 @@ class AnnotationEditorController extends ChangeNotifier {
     placingShape = false;
     placingType = null;
 
-    notifyListeners();
+    _notifyListeners();
 
-    await _repository.createShape(
-      slideId: slideId,
-      shape: shape,
-    );
+    await _repository.createShape(slideId: slideId, shape: shape);
 
     return shape;
   }
@@ -133,12 +138,10 @@ class AnnotationEditorController extends ChangeNotifier {
 
     selectedShape = shape;
 
-    notifyListeners();
+    _notifyListeners();
   }
 
-  void clearSelection({
-    bool notify = true,
-  }) {
+  void clearSelection({bool notify = true}) {
     for (final s in shapes) {
       s.selected = false;
     }
@@ -146,7 +149,7 @@ class AnnotationEditorController extends ChangeNotifier {
     selectedShape = null;
 
     if (notify) {
-      notifyListeners();
+      _notifyListeners();
     }
   }
 
@@ -159,15 +162,13 @@ class AnnotationEditorController extends ChangeNotifier {
     required Offset delta,
   }) async {
     if (selectedShape == null) return;
+    if (selectedShape!.fixed) return;
 
     selectedShape!.center += delta;
 
-    notifyListeners();
+    _notifyListeners();
 
-    await _repository.updateShape(
-      slideId: slideId,
-      shape: selectedShape!,
-    );
+    await _repository.updateShape(slideId: slideId, shape: selectedShape!);
   }
 
   //====================================================
@@ -180,6 +181,7 @@ class AnnotationEditorController extends ChangeNotifier {
     required double height,
   }) async {
     if (selectedShape == null) return;
+    if (selectedShape!.fixed) return;
 
     if (width > 30) {
       selectedShape!.width = width;
@@ -189,12 +191,9 @@ class AnnotationEditorController extends ChangeNotifier {
       selectedShape!.height = height;
     }
 
-    notifyListeners();
+    _notifyListeners();
 
-    await _repository.updateShape(
-      slideId: slideId,
-      shape: selectedShape!,
-    );
+    await _repository.updateShape(slideId: slideId, shape: selectedShape!);
   }
 
   //====================================================
@@ -209,12 +208,9 @@ class AnnotationEditorController extends ChangeNotifier {
 
     selectedShape!.rotation += angle;
 
-    notifyListeners();
+    _notifyListeners();
 
-    await _repository.updateShape(
-      slideId: slideId,
-      shape: selectedShape!,
-    );
+    await _repository.updateShape(slideId: slideId, shape: selectedShape!);
   }
 
   //====================================================
@@ -236,21 +232,16 @@ class AnnotationEditorController extends ChangeNotifier {
       ..notes = notes
       ..color = color;
 
-    notifyListeners();
+    _notifyListeners();
 
-    await _repository.updateShape(
-      slideId: slideId,
-      shape: selectedShape!,
-    );
+    await _repository.updateShape(slideId: slideId, shape: selectedShape!);
   }
 
   //====================================================
   // DUPLICATE
   //====================================================
 
-  Future<void> duplicateSelected(
-      String slideId,
-      ) async {
+  Future<void> duplicateSelected(String slideId) async {
     if (selectedShape == null) return;
 
     final duplicate = selectedShape!.clone();
@@ -265,21 +256,16 @@ class AnnotationEditorController extends ChangeNotifier {
 
     selectedShape = duplicate;
 
-    notifyListeners();
+    _notifyListeners();
 
-    await _repository.createShape(
-      slideId: slideId,
-      shape: duplicate,
-    );
+    await _repository.createShape(slideId: slideId, shape: duplicate);
   }
 
   //====================================================
   // DELETE
   //====================================================
 
-  Future<void> deleteSelected(
-      String slideId,
-      ) async {
+  Future<void> deleteSelected(String slideId) async {
     if (selectedShape == null) return;
 
     final id = selectedShape!.id;
@@ -288,12 +274,9 @@ class AnnotationEditorController extends ChangeNotifier {
 
     selectedShape = null;
 
-    notifyListeners();
+    _notifyListeners();
 
-    await _repository.deleteShape(
-      slideId: slideId,
-      annotationId: id,
-    );
+    await _repository.deleteShape(slideId: slideId, annotationId: id);
   }
 
   //====================================================
@@ -309,11 +292,12 @@ class AnnotationEditorController extends ChangeNotifier {
 
     placingType = null;
 
-    notifyListeners();
+    _notifyListeners();
   }
 
   @override
   void dispose() {
+    _disposed = true;
     _shapesSubscription?.cancel();
     super.dispose();
   }

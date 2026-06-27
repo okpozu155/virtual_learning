@@ -33,13 +33,18 @@ class _QuizScreenState extends State<QuizScreen> {
 
   Future<void> loadQuiz() async {
     try {
-      quiz = await repository.getQuizBySlideId(widget.slideId);
+      final loadedQuiz = await repository.getQuizBySlideId(widget.slideId);
+
+      if (!mounted) return;
 
       setState(() {
+        quiz = loadedQuiz;
         loading = false;
       });
     } catch (e) {
       debugPrint("Quiz error: $e");
+
+      if (!mounted) return;
 
       setState(() {
         loading = false;
