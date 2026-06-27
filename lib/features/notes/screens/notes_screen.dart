@@ -74,7 +74,7 @@ class _NotesScreenState extends State<NotesScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     DropdownButtonFormField<String>(
-                      value: selectedTopic,
+                      initialValue: selectedTopic,
                       decoration: const InputDecoration(labelText: 'Topic'),
                       hint: const Text('Choose a slide topic'),
                       items: [

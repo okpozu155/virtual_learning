@@ -1,23 +1,30 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 
+import '../../firebase/firebase_collections.dart';
 import '../models/hotspot_model.dart';
 
 class HotspotRepository {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<List<HotspotModel>> getHotspots(
-      String slideId) async {
+  Future<List<HotspotModel>> getHotspots(String slideId) async {
+    final snapshot = await _firestore
+        .collection(FirestoreCollections.hotspots(slideId))
+        .get();
 
-    final jsonString =
-    await rootBundle.loadString(
-      'assets/data/hotspots.json',
-    );
+    if (snapshot.docs.isNotEmpty) {
+      return snapshot.docs
+          .map((doc) => HotspotModel.fromJson({'id': doc.id, ...doc.data()}))
+          .toList();
+    }
 
-    final List<dynamic> data =
-    json.decode(jsonString);
+    final jsonString = await rootBundle.loadString('assets/data/hotspots.json');
+
+    final List<dynamic> data = json.decode(jsonString);
 
     final slideData = data.firstWhere(
-          (e) => e['slideId'] == slideId,
+      (e) => e['slideId'] == slideId,
       orElse: () => null,
     );
 
@@ -26,9 +33,20 @@ class HotspotRepository {
     }
 
     return (slideData['hotspots'] as List)
-        .map(
-          (e) => HotspotModel.fromJson(e),
-    )
+        .map((e) => HotspotModel.fromJson(e))
         .toList();
+  }
+
+  Stream<List<HotspotModel>> streamHotspots(String slideId) {
+    return _firestore
+        .collection(FirestoreCollections.hotspots(slideId))
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => HotspotModel.fromJson({'id': doc.id, ...doc.data()}),
+              )
+              .toList(),
+        );
   }
 }

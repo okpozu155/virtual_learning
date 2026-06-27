@@ -66,7 +66,7 @@ class ProgressService {
     final uid = user.uid;
     final scorePrefix = "${_progressKey}_${uid}_";
     final viewedSlides =
-        prefs.getStringList("${_viewedSlidesKey}_${uid}") ?? [];
+        prefs.getStringList("${_viewedSlidesKey}_$uid") ?? [];
 
     final scores = <int>[];
 
@@ -100,7 +100,7 @@ class ProgressService {
       }
     }
 
-    await prefs.remove("${_viewedSlidesKey}_${uid}");
+    await prefs.remove("${_viewedSlidesKey}_$uid");
 
     await _syncProgressDocument();
   }

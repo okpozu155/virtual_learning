@@ -76,11 +76,37 @@ class _MicroscopeScreenState extends State<MicroscopeScreen> {
     Navigator.pushNamed(context, '/hotspot-info', arguments: hotspot);
   }
 
+  void _showSlideDescription() {
+    final description = widget.slide.description.trim();
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text("${widget.slide.title} Description"),
+        content: SingleChildScrollView(
+          child: Text(
+            description.isEmpty
+                ? "No slide description has been added yet."
+                : description,
+          ),
+        ),
+        actions: [
+          TextButton(
+            child: const Text("Close"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showAnnotation(Map<String, dynamic> annotation) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text(annotation['title'] ?? ''),
+        title: Text(annotation['title'] ?? annotation['label'] ?? ''),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,7 +140,7 @@ class _MicroscopeScreenState extends State<MicroscopeScreen> {
       backgroundColor: Colors.black,
 
       appBar: AppBar(
-        backgroundColor: Colors.black.withOpacity(.85),
+        backgroundColor: Colors.black.withValues(alpha: .85),
         elevation: 0,
 
         title: Row(
@@ -189,24 +215,16 @@ class _MicroscopeScreenState extends State<MicroscopeScreen> {
                           child: Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(.7),
+                              color: Colors.black.withValues(alpha: .7),
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 _actionButton(
-                                  icon: Icons.note_alt_outlined,
-                                  label: "Hotspot Notes",
-                                  onTap: () {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          "Tap a hotspot or annotation marker to view details.",
-                                        ),
-                                      ),
-                                    );
-                                  },
+                                  icon: Icons.description_outlined,
+                                  label: "slide description",
+                                  onTap: _showSlideDescription,
                                 ),
 
                                 _actionButton(

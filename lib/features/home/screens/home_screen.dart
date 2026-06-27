@@ -22,7 +22,6 @@ import '../../../core/theme/character_animation.dart';
 
 import '../../../data/models/slide_model.dart';
 import '../../../data/repositories/slide_repository.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
