@@ -215,7 +215,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Virtual Learn"),
+        title: const Text(
+          "VIRTUAL LEARN",
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.admin_panel_settings),
@@ -241,6 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const CharacterAnimation(
               text: "Continue your microscopy journey",
               color: Color(0xFF239C16),
+              animateDots: true,
             ),
 
             const SizedBox(height: 20),
