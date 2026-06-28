@@ -75,6 +75,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter: { assets: [ assets/images/microscope.png, assets/images/slides/,
-                     assets/data/slides.json, assets/data/quizzes.json,
-                     assets/data/hotspots.json ], uses-material-design: true,
+                     assets/data/slides.json, assets/images/readme_images/ ], uses-material-design: true,
   shaders: [    ], fonts: [    ], generate: false }
+

@@ -12,7 +12,7 @@ class RectanglePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final fillPaint = Paint()
-      ..color = color.withOpacity(0.20)
+      ..color = color.withValues(alpha: 0.20)
       ..style = PaintingStyle.fill;
 
     final borderPaint = Paint()

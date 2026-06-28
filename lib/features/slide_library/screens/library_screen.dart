@@ -151,7 +151,10 @@ class _LibraryScreenState extends State<LibraryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Slide Library"),
+        title: const Text("Slide Library",
+          style: TextStyle(fontSize: 24,
+              fontWeight: FontWeight.bold),
+        ),
       ),
       body: loading
           ? const Center(

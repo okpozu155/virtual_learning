@@ -13,14 +13,13 @@ class HotspotModel {
     required this.description,
   });
 
-  factory HotspotModel.fromJson(
-      Map<String, dynamic> json) {
+  factory HotspotModel.fromJson(Map<String, dynamic> json) {
     return HotspotModel(
-      id: json['id'],
-      title: json['title'],
-      x: (json['x'] as num).toDouble(),
-      y: (json['y'] as num).toDouble(),
-      description: json['description'],
+      id: json['id']?.toString() ?? '',
+      title: json['title']?.toString() ?? '',
+      x: (json['x'] as num?)?.toDouble() ?? 0,
+      y: (json['y'] as num?)?.toDouble() ?? 0,
+      description: json['description']?.toString() ?? '',
     );
   }
 }

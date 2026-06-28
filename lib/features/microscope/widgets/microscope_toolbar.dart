@@ -17,7 +17,7 @@ class MicroscopeToolbar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(.8),
+        color: Colors.black.withValues(alpha: .8),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(

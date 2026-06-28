@@ -7,14 +7,11 @@ import '../../annotation/screens/annotation_designer_screen.dart';
 import '../../../data/repositories/cloudinary_repository.dart';
 import '../../../data/repositories/slide_repository.dart';
 
-
-
 class SlideManagementScreen extends StatefulWidget {
   const SlideManagementScreen({super.key});
 
   @override
-  State<SlideManagementScreen> createState() =>
-      _SlideManagementScreenState();
+  State<SlideManagementScreen> createState() => _SlideManagementScreenState();
 }
 
 class _SlideManagementScreenState extends State<SlideManagementScreen> {
@@ -34,9 +31,7 @@ class _SlideManagementScreenState extends State<SlideManagementScreen> {
 
       for (final image in images) {
         try {
-          final imageUrl = await cloudinary.uploadImage(
-            File(image.path),
-          );
+          final imageUrl = await cloudinary.uploadImage(File(image.path));
 
           final slideId = image.name.split('.').first;
 
@@ -56,20 +51,16 @@ class _SlideManagementScreenState extends State<SlideManagementScreen> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Slides uploaded successfully"),
-        ),
+        const SnackBar(content: Text("Slides uploaded successfully")),
       );
     } catch (e) {
       debugPrint("Upload failed: $e");
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Upload failed: $e"),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Upload failed: $e")));
     }
   }
 
@@ -81,9 +72,7 @@ class _SlideManagementScreenState extends State<SlideManagementScreen> {
       context: context,
       builder: (_) => AlertDialog(
         title: const Text("Delete Slide"),
-        content: Text(
-          "Delete '$title'?\n\nThis action cannot be undone.",
-        ),
+        content: Text("Delete '$title'?\n\nThis action cannot be undone."),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -104,28 +93,82 @@ class _SlideManagementScreenState extends State<SlideManagementScreen> {
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("$title deleted"),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("$title deleted")));
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Delete failed: $e"),
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Delete failed: $e")));
+    }
+  }
+
+  Future<void> _editSlideDescription({
+    required String slideId,
+    required String title,
+    required String currentDescription,
+  }) async {
+    final descriptionController = TextEditingController(
+      text: currentDescription,
+    );
+
+    final description = await showDialog<String>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text("Slide Description"),
+        content: TextField(
+          controller: descriptionController,
+          decoration: InputDecoration(
+            labelText: title,
+            hintText: "Enter the information students should see.",
+            border: const OutlineInputBorder(),
+          ),
+          maxLines: 6,
+          textInputAction: TextInputAction.newline,
         ),
-      );
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context, descriptionController.text.trim());
+            },
+            child: const Text("Save"),
+          ),
+        ],
+      ),
+    );
+
+    descriptionController.dispose();
+
+    if (description == null) return;
+
+    try {
+      await firestore.collection('slides').doc(slideId).update({
+        'description': description,
+      });
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Description saved for $title")));
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Description save failed: $e")));
     }
   }
 
   Widget _buildSlideImage(String? imageUrl) {
     if (imageUrl == null || imageUrl.isEmpty) {
-      return const Icon(
-        Icons.image,
-        size: 50,
-      );
+      return const Icon(Icons.image, size: 50);
     }
 
     return ClipRRect(
@@ -135,11 +178,8 @@ class _SlideManagementScreenState extends State<SlideManagementScreen> {
         width: 60,
         height: 60,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) {
-          return const Icon(
-            Icons.broken_image,
-            size: 50,
-          );
+        errorBuilder: (_, _, _) {
+          return const Icon(Icons.broken_image, size: 50);
         },
       ),
     );
@@ -148,23 +188,20 @@ class _SlideManagementScreenState extends State<SlideManagementScreen> {
   void _openAnnotationDesigner({
     required String slideId,
     required String imageUrl,
-  }) {Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => AnnotationDesignerScreen(
-        slideId: slideId,
-        imageUrl: imageUrl,
+  }) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            AnnotationDesignerScreen(slideId: slideId, imageUrl: imageUrl),
       ),
-    ),
-  );
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Slide Management"),
-      ),
+      appBar: AppBar(title: const Text("Slide Management")),
       floatingActionButton: FloatingActionButton(
         onPressed: uploadSlides,
         child: const Icon(Icons.upload),
@@ -186,32 +223,19 @@ class _SlideManagementScreenState extends State<SlideManagementScreen> {
             child: StreamBuilder<QuerySnapshot>(
               stream: firestore
                   .collection('slides')
-                  .orderBy(
-                'createdAt',
-                descending: true,
-              )
+                  .orderBy('createdAt', descending: true)
                   .snapshots(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      "Error: ${snapshot.error}",
-                    ),
-                  );
+                  return Center(child: Text("Error: ${snapshot.error}"));
                 }
 
-                if (!snapshot.hasData ||
-                    snapshot.data!.docs.isEmpty) {
-                  return const Center(
-                    child: Text("No slides uploaded"),
-                  );
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(child: Text("No slides uploaded"));
                 }
 
                 final docs = snapshot.data!.docs;
@@ -219,17 +243,15 @@ class _SlideManagementScreenState extends State<SlideManagementScreen> {
                 return ListView.builder(
                   itemCount: docs.length,
                   itemBuilder: (context, index) {
-                    final slide =
-                    docs[index].data() as Map<String, dynamic>;
+                    final slide = docs[index].data() as Map<String, dynamic>;
 
                     final slideId = docs[index].id;
 
-                    final imageUrl =
-                        slide['imageUrl']?.toString() ?? '';
+                    final imageUrl = slide['imageUrl']?.toString() ?? '';
 
-                    final title =
-                        slide['title']?.toString() ??
-                            'Untitled';
+                    final title = slide['title']?.toString() ?? 'Untitled';
+
+                    final description = slide['description']?.toString() ?? '';
 
                     return Card(
                       margin: const EdgeInsets.symmetric(
@@ -259,10 +281,7 @@ class _SlideManagementScreenState extends State<SlideManagementScreen> {
                                     value: "delete",
                                     child: Row(
                                       children: [
-                                        Icon(
-                                          Icons.delete,
-                                          color: Colors.red,
-                                        ),
+                                        Icon(Icons.delete, color: Colors.red),
                                         SizedBox(width: 8),
                                         Text("Delete"),
                                       ],
@@ -272,15 +291,49 @@ class _SlideManagementScreenState extends State<SlideManagementScreen> {
                               ),
                             ),
                             const SizedBox(height: 12),
+                            InkWell(
+                              onTap: () {
+                                _editSlideDescription(
+                                  slideId: slideId,
+                                  title: title,
+                                  currentDescription: description,
+                                );
+                              },
+                              child: InputDecorator(
+                                decoration: const InputDecoration(
+                                  labelText: "Slide Description",
+                                  border: OutlineInputBorder(),
+                                ),
+                                child: Text(
+                                  description.isEmpty
+                                      ? "Tap to add slide information"
+                                      : description,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            SizedBox(
+                              width: double.infinity,
+                              child: OutlinedButton.icon(
+                                icon: const Icon(Icons.description_outlined),
+                                label: const Text("Edit Slide Description"),
+                                onPressed: () {
+                                  _editSlideDescription(
+                                    slideId: slideId,
+                                    title: title,
+                                    currentDescription: description,
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 12),
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton.icon(
-                                icon: const Icon(
-                                  Icons.edit_location_alt,
-                                ),
-                                label: const Text(
-                                  "Annotate Slide",
-                                ),
+                                icon: const Icon(Icons.edit_location_alt),
+                                label: const Text("Annotate Slide"),
                                 onPressed: () {
                                   _openAnnotationDesigner(
                                     slideId: slideId,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/routes/app_routes.dart';
+import '../../../core/theme/character_animation.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -41,16 +42,11 @@ class WelcomePage extends StatelessWidget {
                 const SizedBox(height: 22),
 
                 // Main Header
-                const Text(
-                  'Welcome to Virtual Learn',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
+                CharacterAnimation(
+                  text: 'Welcome to Virtual Learn',
+                  color: const Color(0xFF0A2E5C), // Navy Blue
                 ),
-                const SizedBox(height: 8),
+
 
                 // Subtitle
                 const Text(
@@ -59,7 +55,7 @@ class WelcomePage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black54,
+                    color: Colors.black87,
                     height: 1.35,
                   ),
                 ),
@@ -183,7 +179,7 @@ class WelcomePage extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: Colors.teal,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -191,7 +187,8 @@ class WelcomePage extends StatelessWidget {
                   subtitle,
                   style: const TextStyle(
                     fontSize: 12,
-                    color: Colors.black54,
+                    color: Colors.blueAccent,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],

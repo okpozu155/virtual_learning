@@ -44,7 +44,7 @@ class _QuizManagementScreenState
               return Padding(
                 padding: const EdgeInsets.all(16),
                 child: DropdownButtonFormField<String>(
-                  value: selectedSlideId,
+                  initialValue: selectedSlideId,
                   hint: const Text(
                     "Select Slide",
                   ),

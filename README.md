@@ -1,53 +1,36 @@
 # Virtual Learning Platform
 
+Virtual Learning is a Flutter-based Android educational platform that gives students access to virtual microscopy experiences and interactive learning resources without requiring physical laboratory equipment.
+
+The project addresses challenges faced by schools and learners in environments where access to laboratories, microscopes, reliable internet connectivity, and educational resources may be limited. It also supports instructor and student communication through an admin-to-student messaging and response system.
+
 ## Project Overview
 
-Virtual Learning is an engaging Flutter-based educational platform designed solely for Android platforms to provide students with access to virtual microscopy experiences and interactive learning resources without requiring physical laboratory equipment.
+The platform combines mobile learning, virtual microscopy, and cloud-based content management into a single educational application. Students can examine digital microscope slides, interact with annotated regions and educational hotspots, complete quizzes, take notes, download learning materials for offline use, and communicate with instructors.
 
-The idea behind this project development is to address challenges faced by schools and students in environments where access to laboratory facilities, microscopes, reliable internet connectivity, and educational resources may be limited. This application also include instructor (Admin) <---> user (Student) interactive communication and response system.
+Administrators and tutors can upload and organize microscope slides, create annotations and hotspots, manage quizzes, maintain educational content, monitor learning progress, and prepare the platform for future AI-assisted learning features.
 
-The platform enables students to:
-
-- Access digital microscope slides
-- Zoom and inspect biological specimens
-- Download slides for offline viewing
-- View hotspot explanations
-- Study at their desired time and pace.
-- Take quizzes related to specimens
-- potentially interact with AI-assisted learning tools **
-- Study annotated regions of interest
-
-
-The system combines mobile learning, virtual laboratory experiences, and cloud-based content management into a single educational platform that aims to mimic an interactive "Alternative to Practical" classroom.
-
----
-
-# Problem Statement
+## Problem Statement
 
 Many schools face challenges in providing practical science education due to:
 
 - Limited laboratory equipment
 - High costs of microscopes and specimen preparation
-- Inability to assemble students in a laboratory (MOOC and other online schools)
+- Difficulty assembling students in a laboratory, especially for MOOCs and online schools
 - Limited access to educational resources
 - Geographic constraints
 - Internet connectivity issues
 
+This project provides a digital alternative that allows students to perform virtual observations and learning activities using a mobile device. The ubiquity of mobile devices and the application's low internet requirement make practical digital learning more accessible and affordable.
 
-This project provides a digital alternative that allows students to perform virtual observations and learning activities using a mobile device. The ubiquity of mobile devices and low internet requirement of the application ensures that more people access digital learning experience cheaply.
+## Target Audience
 
----
+- High school students
+- Independent candidates preparing for external examinations
+- Distance-learning students who need alternatives to physical practical sessions
+- University students in biological sciences, histology, anatomy and physiology, botany, and environmental science
 
-# Specific Target Audience
-- High school students.
-- Independent candidates of external examinations.
-- Distant learning students (Alternative to practical)
-- Application can be scaled to meet the needs of University students (Biological Sciences, Histology, Anatomy and Physiology, Botany and Environmental Science students).
-
-
-# Project Objectives
-
-The objectives of this project are:
+## Project Objectives
 
 - Provide access to virtual microscopy experiences
 - Improve science education accessibility
@@ -56,15 +39,78 @@ The objectives of this project are:
 - Create interactive learning experiences
 - Reduce dependence on physical laboratory resources
 
----
+## Core Capabilities
 
-# Features Implemented
+### Students Can
 
-## Authentication Module
+- Access digital microscope slides
+- Zoom and inspect biological specimens
+- Download slides for offline viewing
+- View hotspot explanations
+- Study at their own time and pace
+- Study annotated regions of interest
+- Take specimen-related quizzes
+- Create, edit, and delete study notes
+- Communicate with instructors
+- Potentially interact with AI-assisted learning tools in future versions
 
-Implemented using Firebase Authentication.
+### Administrators and Tutors Can
 
-### Student Registration
+- Upload and manage digital microscope slides
+- Organize slides into biological categories and topics
+- Create, edit, and manage interactive hotspots
+- Annotate regions of interest on microscope slides
+- Create, update, and manage quizzes associated with individual specimens
+- Monitor student learning progress and quiz performance
+- Update and maintain educational content in real time
+- Manage user accounts and access to platform resources
+- Provide structured materials that support self-paced study
+- Integrate and manage AI-assisted learning features in future versions
+
+## Glossary
+
+| Term | Definition |
+| --- | --- |
+| Annotation | A digital note, label, or graphical marker, such as a rectangle or polygon, placed on a microscope slide to identify or explain a region of interest. |
+| Authentication | The process of verifying a user's identity before granting access to the application using secure login credentials. |
+| Cloud Firestore | Google's NoSQL cloud database used to store application data such as users, microscope slides, annotations, hotspots, quizzes, and progress records. |
+| Cloud Storage | Online storage services used to securely store digital microscope images and other educational resources for remote access. |
+| Digital Microscope Slide | A high-resolution image of a biological specimen that can be viewed and manipulated electronically instead of using a physical microscope. |
+| Firebase | Google's Backend-as-a-Service platform that provides authentication, databases, cloud storage, and hosting for the application. |
+| Hotspot | An interactive point placed on a microscope slide that displays additional information when selected by a learner. |
+| Microscope Slide | A prepared specimen mounted for microscopic examination. In this system, it refers to its digitized version. |
+| NoSQL Database | A non-relational database designed to store flexible, document-based data structures, such as Cloud Firestore. |
+| Offline Viewing | A feature that allows downloaded microscope slides to be accessed without an internet connection. |
+| Panning and Zooming | The process of moving across and magnifying a digital microscope image to observe finer specimen details. |
+| Polygon Annotation | A multi-sided graphical shape used to accurately outline irregular regions of interest on a microscope slide. |
+| Quiz | A set of assessment questions designed to evaluate students' understanding of a microscope specimen or related topic. |
+| Slide Library | The collection of digital microscope slides available within the application for study. |
+| Student | The primary end user who accesses slides, explores annotations, views hotspots, completes quizzes, and tracks learning progress. |
+| Tutor/Admin | An educator responsible for uploading microscope slides, creating annotations and hotspots, designing quizzes, and monitoring student learning. |
+| Virtual Laboratory | A digital environment that simulates laboratory activities, allowing students to study specimens without physical laboratory equipment. |
+| Virtual Microscope | Software that simulates the functions of a traditional microscope, allowing users to zoom, pan, inspect, and interact with digital microscope slides. |
+
+## Features Implemented
+
+### Authentication Module
+
+The Authentication Module is the gateway to the Virtual Learning platform. It provides secure registration, login, password recovery, and role-based access control using Firebase Authentication.
+
+Students can register and access protected learning resources, while administrators and tutors receive additional privileges for content management, annotation creation, quiz management, and student performance monitoring.
+
+<p align="center">
+  <img src="assets/images/readme_images/signup_screen.jpg" width="250" alt="Sign up screen">
+  <br>
+  <em>Sign up screen</em>
+</p>
+
+<p align="center">
+  <img src="assets/images/readme_images/login_screen.jpg" width="250" alt="Login screen">
+  <br>
+  <em>Login screen</em>
+</p>
+
+#### Student Registration
 
 Students can:
 
@@ -72,280 +118,193 @@ Students can:
 - Validate user input
 - Register using email and password
 
-### Student Login
+#### Student Login
 
 Students can:
 
 - Sign in securely
 - Access protected content
 
-### Password Recovery
+#### Password Recovery
 
 Students can:
 
 - Request password reset emails
 - Recover forgotten accounts
 
----
+### Dashboard
 
-## Dashboard
+The Dashboard is the main entry point after login. It provides a centralized interface for accessing the platform's major learning features, including the Slide Library, Virtual Microscope, Quizzes, Notes, Downloaded Slides, profile information, instructor messages, and bulletins.
 
-The dashboard serves as the central navigation panel.
+New students can only access the microscope after viewing a slide from the Slide Library. Similarly, quiz access is tied to previously viewed slides. The Recent Topic panel helps users return quickly to previously viewed slides and track their progress.
 
-Students can access:
+<p align="center">
+  <img src="assets/images/readme_images/home_screen.jpg" width="250" alt="Dashboard">
+  <br>
+  <em>Dashboard</em>
+</p>
 
-- Slide Library
-- Virtual Microscope
-- Quizzes
-- Notes
-- Downloaded Slides
+<p align="center">
+  <img src="assets/images/readme_images/img.png" width="250" alt="Student menu">
+  <br>
+  <em>Student menu</em>
+</p>
 
----
+The Profile screen displays student biodata and overall performance across slide views and quizzes using a progress indicator. The Messages screen allows students to read replies from administrators and tutors. Bulletins display general announcements from administrators.
 
-## Virtual Microscope
+### Student Workflow
 
-The microscope module simulates real microscope interaction.
+```text
+Launch App
+   ↓
+Login / Register
+   ↓
+Dashboard
+   ↓
+Select Slide
+   ↓
+Open Microscope
+   ↓
+Zoom & Explore
+   ↓
+View Hotspots
+   ↓
+Read Annotations
+   ↓
+Take Quiz
+   ↓
+Review Learning
+   ↓
+Ask Instructor
+```
 
-### Features
+Students may ask instructors for help while exploring hotspots, taking quizzes, or reviewing learning materials.
+
+### Virtual Microscope
+
+The Virtual Microscope module is the core component of the platform. It provides a digital environment that simulates the experience of using a physical microscope by allowing students to examine high-resolution images of biological specimens.
+
+The module supports:
 
 - High-resolution slide viewing
 - Zoom controls
 - Pan controls
 - Interactive slide navigation
+- Hotspot and annotation overlays
 
-Students can inspect specimens similarly to using a physical microscope.
+<p align="center">
+  <img src="assets/images/readme_images/microscope_screen.jpg" width="250" alt="Microscope screen">
+  <br>
+  <em>Microscope screen</em>
+</p>
 
----
+### Slide Library
 
-## Hotspot System
+The Slide Library is the primary repository of digital microscope specimens. It provides organized access to high-resolution slides and includes search functionality for quick specimen retrieval.
 
-Hotspots allow educators to highlight important specimen regions.
+Students can use the Slide Library to:
 
-Each hotspot can contain:
+- Browse microscope slides
+- Search for specimens
+- Launch slides in the Virtual Microscope
+- Access related hotspots, annotations, and quizzes
+- Download slides for offline viewing
+
+<p align="center">
+  <img src="assets/images/readme_images/slide_library.jpg" width="250" alt="Slide Library">
+  <br>
+  <em>Slide Library</em>
+</p>
+
+### Hotspot System
+
+The Hotspot System enables educators to highlight significant regions within digital microscope slides. Each hotspot contains educational content such as a title, description, and supporting notes.
+
+Students can tap hotspots while viewing a slide to reveal contextual explanations. This combines visual exploration with guided learning and helps students identify important biological structures.
+
+<p align="center">
+  <img src="assets/images/readme_images/slide_annotation.jpg" width="250" alt="Slide showing hotspots">
+  <br>
+  <em>Slide showing hotspots</em>
+</p>
+
+### Annotation System
+
+The Annotation System enables educators to mark and describe regions of interest on digital microscope slides. It supports creating, editing, duplicating, repositioning, resizing, and deleting annotations.
+
+Each annotation can store:
 
 - Title
 - Description
 - Notes
+- Custom color
+- Shape information
 
-Students can tap hotspots to view educational information.
+Annotations are synchronized with Cloud Firestore, allowing students to view highlighted specimen regions and educational information in real time. The annotation designer supports real-time loading, selection, resizing, duplication, deletion, and detail updates for saved annotation shapes.
 
----
+<p align="center">
+  <img src="assets/images/readme_images/annotation_buttons.png" width="250" alt="Annotation buttons">
+  <br>
+  <em>Annotation controls</em>
+</p>
 
-## Annotation System
+### Quiz System
 
-A complete annotation system has been implemented.
+The Quiz System provides specimen-related assessments that allow students to evaluate their understanding after examining microscope slides. Students can launch quizzes, answer multiple-choice questions, and receive feedback on their performance.
 
-### Point Annotations
-
-Features include:
-
-- Custom titles
-- Descriptions
-- Notes
-- Color selection
-- Visible labels
-
-### Polygon Annotations
-
-Supports:
-
-- Multi-point region selection
-- Polygon drawing
-- Region highlighting
-- Educational labeling
-
-### Annotation Management
-
-Administrators can:
-
-- Create annotations
-- Edit annotations
-- Duplicate annotations
-- Delete annotations
-- Add titles, descriptions, notes, and colors through the annotation details dialog
-
-Annotations are saved in Cloud Firestore under each slide document:
-
-```text
-slides/{slideId}/annotations/{annotationId}
-```
-
-The annotation designer supports realtime loading, selection, resizing, duplication, deletion, and detail updates for saved annotation shapes.
-
----
-
-## Quiz System
-
-The platform includes specimen-related assessments.
-
-Students can:
-
-- Launch quizzes
-- Answer questions
-- Evaluate understanding of observed specimens
-
-Quizzes now load from Cloud Firestore instead of the local JSON asset. Quiz content is stored by slide:
+Quiz content is retrieved from Cloud Firestore using the following structure:
 
 ```text
 quizzes/{slideId}/questions/{questionId}
 ```
 
-Each question stores the question text, answer options, and the correct answer index.
+Each question stores:
 
----
+- Question text
+- Answer options
+- Correct answer index
 
-## Notes System
+This cloud-based approach allows tutors to update assessment content without requiring application updates.
 
-The previous dashboard AI entry point has been replaced with a Notes notebook.
+<p align="center">
+  <img src="assets/images/readme_images/quiz_screen.jpg" width="250" alt="Quiz screen">
+  <br>
+  <em>Quiz screen</em>
+</p>
 
-Students can:
+### Notes System
 
-- Open NOTES from the dashboard
-- Create notes
-- Edit saved notes
-- Delete notes
-- View an auto-generated date panel
-- Select a note topic from available slide names
-- Enter a custom topic when the note is not tied to a slide
+The Notes module enables students to record, organize, and manage personal study notes. Notes can be created from the dashboard, edited, deleted, automatically timestamped, and associated with a slide topic or custom topic.
 
-Notes are saved locally per user using SharedPreferences, making them available on the same device without requiring a network connection.
+Notes are stored locally per user using SharedPreferences, allowing students to review and modify them without an active internet connection.
 
----
+<p align="center">
+  <img src="assets/images/readme_images/notes_screen.jpg" width="250" alt="Notes screen">
+  <br>
+  <em>Notes screen</em>
+</p>
 
-## Offline Learning Support
+### Offline Learning Support
 
-To address internet limitations:
+The Offline Learning Support feature allows students to continue studying when internet connectivity is limited or unavailable. Students can download microscope slides to their devices and access them locally without a continuous network connection.
 
-Students can:
+<p align="center">
+  <img src="assets/images/readme_images/downloaded.jpg" width="250" alt="Downloaded slide in Slide Library">
+  <br>
+  <em>Slide Library showing a downloaded slide</em>
+</p>
 
-- Download microscope slides
-- Access slides offline
-- Continue learning without connectivity
+### Admin Section
 
----
+The Admin Section provides a centralized management interface for administrators and tutors. Authorized users can upload microscope slides, manage specimen information, create hotspots and annotations, develop quizzes, oversee educational content, and monitor learning progress.
 
-## AI Tutor Integration
+<p align="center">
+  <img src="assets/images/readme_images/admin_dashboard.jpg" width="250" alt="Admin dashboard">
+  <br>
+  <em>Admin dashboard</em>
+</p>
 
-AI tutoring remains a planned enhancement for future versions. The former dashboard AI shortcut is currently used for the student Notes notebook.
-
----
-
-# Technical Implementation
-
-## Frontend
-
-Developed using:
-
-- Flutter
-- Dart
-
-### Architecture
-
-The application follows a structure:
-
-```
-lib/
-├── core/
-├── data/
-├── features/
-│   ├── auth/
-│   ├── admin/
-│   ├── microscope/
-|   ├── message/
-|   ├── screens/
-│   ├── quiz/
-│   └── ai/ (future addition)
-└── widgets/
-```
-
-This separation improves:
-
-- Maintainability
-- Scalability
-- Clarity
-- Reusability
-
----
-
-## Backend
-
-Firebase and Cloudinary services are used.
-
-### Firebase Authentication
-
-Handles:
-
-- User registration
-- User login
-- Password recovery
-
-### Cloud Firestore
-
-Stores:
-
-- Slide metadata
-- Hotspots
-- Annotations
-- Quiz content
-- Student profile data
-- Progress summaries
-
----
-
-## Data Storage
-
-Current storage includes:
-
-### Cloud Storage
-
-- Slide information
-- Annotation records
-- Educational content
-- Images (Cloudinary)
-
-### Local Storage
-
-Used for:
-
-- Offline slide viewing
-- Cached educational resources
-- Student notes
-- Last viewed slide history
-- Local quiz progress cache
-
----
-
-# User Journey
-
-## Student Workflow
-
-```text
-Launch App
-      ↓
-Login / Register
-      ↓
-Dashboard
-      ↓
-Select Slide
-      ↓
-Open Microscope
-      ↓
-Zoom & Explore
-      ↓
-View Hotspots
-      ↓----> Ask Instructor 
-Read Annotations
-      ↓
-Take Quiz
-      ↓----> Ask Instructor 
-Review Learning
-     ↓----> Ask Instructor 
-Ask Instructor 
-```
-
----
-
-## Administrator Workflow
+#### Administrator Workflow
 
 ```text
 Login
@@ -361,90 +320,237 @@ Create Polygon Regions
 Publish Learning Content
 ```
 
----
+<p align="center">
+  <img src="assets/images/readme_images/slide_management_screen.jpg" width="250" alt="Slide management screen">
+  <br>
+  <em>Slide management screen</em>
+</p>
 
-# Design Decisions
+<p align="center">
+  <img src="assets/images/readme_images/admin_login.png" width="250" alt="Admin entry point">
+  <br>
+  <em>Admin entry point on the home screen</em>
+</p>
 
-Several key decisions influenced development:
+Technically, the Admin Section is implemented with Flutter and Firebase. Firebase Authentication verifies administrator credentials and restricts privileged operations. Cloud Firestore stores structured data such as slide metadata, hotspot information, polygon and shape annotations, quiz content, and student progress records.
 
-## Flutter
+High-resolution microscope images are hosted on Cloudinary, with image URLs stored in Firestore for optimized storage and delivery. Firestore streams provide real-time synchronization, so updates made by administrators become available to students without requiring software updates.
 
-Selected because:
+The module implements standard CRUD operations for learning resources. Administrators can upload slides, edit specimen details, reposition and modify annotations, manage hotspots, create and update quiz questions, and remove outdated materials.
 
-- Cross-platform support **
-- Single codebase
-- Strong UI capabilities
+## AI Tutor Integration
 
-## Firebase
+AI tutoring remains a planned enhancement for future versions. The former dashboard AI shortcut is currently used for the student Notes notebook.
 
-Selected because:
+## Technical Implementation
 
-- Fast development cycle
-- Integrated authentication
-- Realtime database capabilities
-- Scalability
+### Architecture
 
-## Coludinary
-- Selected for image storage because:
-- Easy to use
-- Free of cost for small projects
+The application follows a feature-based modular architecture:
 
-## Offline Support
+```text
+lib/
+├── core/
+├── data/
+├── features/
+│   ├── auth/
+│   ├── admin/
+│   ├── microscope/
+│   ├── message/
+│   ├── screens/
+│   ├── quiz/
+│   └── ai/ (future addition)
+└── widgets/
+```
 
-Implemented to support:
+Core functionalities are grouped under dedicated modules such as authentication, administration, microscope, messaging, quiz, notes, downloads, and screens. Shared utilities, data models, repositories, and reusable widgets are maintained in separate directories.
 
-- Rural schools
-- Limited connectivity environments
-- Continuous learning access
+The `core` directory contains shared services, utilities, constants, helper classes, themes, and routes. The `data` directory contains models and repositories responsible for Firebase services and local storage. The `features` directory contains the major functional modules, allowing each feature to maintain its own screens, controllers, widgets, and business logic. The `widgets` directory stores reusable UI components.
 
----
+This organization improves maintainability, scalability, code clarity, and UI consistency.
 
-# Validation and Testing
+### Backend Services
 
-The following functionality has been tested:
+The platform uses Firebase and Cloudinary as its primary backend services.
 
-## Authentication
+Firebase provides:
 
-- User registration
-- Login
-- Logout
-- Password reset
+- Authentication
+- Cloud Firestore data storage
+- Real-time synchronization
+- User and role management support
 
-## Microscope Module
+Cloudinary provides:
 
-- Slide loading
-- Zoom controls
-- Pan controls
+- High-resolution microscope image storage
+- Optimized image delivery
+- Media hosting for digital slides
 
-## Annotation System
+### Firebase Authentication
 
-- Point annotation creation
-- Polygon annotation creation
-- Annotation retrieval
-- Annotation display
-- Annotation duplication
-- Annotation deletion
-- Annotation detail editing
+Firebase Authentication manages user identity and access through secure registration, login, and password recovery. It supports role-based access for students and administrators.
 
-## Notes System
+### Cloud Firestore
 
-- Note creation
-- Note editing
-- Note deletion
-- Date panel display
-- Slide-topic selection
-- Custom topic entry
+Cloud Firestore is the primary NoSQL cloud database. It stores and synchronizes:
 
-## Offline Features
+- Slide metadata
+- Hotspots
+- Annotations
+- Quiz content
+- Student profile information
+- Learning progress summaries
+- Messages and bulletins
 
-- Slide download
-- Offline retrieval
+<p align="center">
+  <img src="assets/images/readme_images/firebase.png" width="250" alt="Firebase NoSQL collections">
+  <br>
+  <em>Firebase NoSQL collections</em>
+</p>
 
----
+### Data Storage
 
-# Achievements
+The application uses both cloud and local storage to support online and offline learning.
 
-Successfully implemented:
+#### Cloud Storage
+
+Cloud storage maintains shared educational resources and media assets, including slide information, annotation records, educational content, and microscope images hosted on Cloudinary.
+
+#### Local Storage
+
+Local storage supports offline learning by preserving essential data on the user's device, including:
+
+- Downloaded slides
+- Cached educational resources
+- Student notes
+- Last viewed slide history
+- Local quiz progress cache
+
+## Module Summary
+
+### Authentication Module
+
+The Authentication Module verifies user identities and controls access to the application. It supports registration, login, password recovery, input validation, and secure sessions through Firebase Authentication.
+
+<p align="center">
+  <img src="assets/images/readme_images/auth.png" width="250" alt="Authentication module skeleton">
+  <br>
+  <em>Authentication module skeleton</em>
+</p>
+
+### Dashboard Module
+
+The Dashboard Module provides quick access to the Slide Library, Virtual Microscope, Quizzes, Notes, Downloaded Slides, profile pages, messages, and bulletins.
+
+<p align="center">
+  <img src="assets/images/readme_images/dash_sk.png" width="250" alt="Dashboard module skeleton">
+  <br>
+  <em>Dashboard module skeleton</em>
+</p>
+
+### Slide Library Module
+
+The Slide Library Module presents high-resolution biological slides in an organized, searchable interface. Students can open slides in the Virtual Microscope, access hotspots and annotations, launch quizzes, or download slides for offline use.
+
+### Virtual Microscope Module
+
+The Virtual Microscope Module allows students to zoom, pan, and inspect digital microscope slides while interacting with educational overlays such as hotspots and annotations.
+
+<p align="center">
+  <img src="assets/images/readme_images/am.png" width="250" alt="Virtual Microscope module">
+  <br>
+  <em>Virtual Microscope module</em>
+</p>
+
+### Hotspot Module
+
+The Hotspot Module enables educators to place interactive markers on important specimen regions. Each hotspot contains a title, description, and notes displayed when selected by a student.
+
+<p align="center">
+  <img src="assets/images/readme_images/hqn.png" width="250" alt="Hotspot module">
+  <br>
+  <em>Hotspot module</em>
+</p>
+
+### Annotation Module
+
+The Annotation Module allows administrators to create, edit, resize, reposition, duplicate, and delete visual annotations. Annotation data is synchronized through Cloud Firestore.
+
+<p align="center">
+  <img src="assets/images/readme_images/annot_sk.png" width="250" alt="Annotation module skeleton">
+  <br>
+  <em>Annotation module skeleton</em>
+</p>
+
+### Polygon Annotation Module
+
+The Polygon Annotation Module extends the annotation system by supporting free-form polygon creation for irregular specimen regions. Administrators can define multiple vertices to accurately outline complex biological structures.
+
+### Quiz Module
+
+The Quiz Module provides formative assessments linked directly to microscope slides. Quiz content is retrieved dynamically from Cloud Firestore, scores are calculated automatically, and progress is stored for monitoring.
+
+<p align="center">
+  <img src="assets/images/readme_images/quiz_screen.jpg" width="250" alt="Quiz module">
+  <br>
+  <em>Quiz module</em>
+</p>
+
+### Notes Module
+
+The Notes Module allows students to create, edit, organize, and delete personal study notes. Notes may be associated with a microscope slide or created using custom topics, and they are stored locally using SharedPreferences.
+
+<p align="center">
+  <img src="assets/images/readme_images/notes_screen.jpg" width="250" alt="Notes module">
+  <br>
+  <em>Notes module</em>
+</p>
+
+### Offline Learning Module
+
+The Offline Learning Module allows students to download microscope slides and educational resources for offline use.
+
+<p align="center">
+  <img src="assets/images/readme_images/dpm.png" width="250" alt="Offline learning module">
+  <br>
+  <em>Offline learning module</em>
+</p>
+
+### Admin Module
+
+The Admin Module provides secure content management for microscope slides, hotspots, annotations, quizzes, specimen information, messages, and bulletins.
+
+<p align="center">
+  <img src="assets/images/readme_images/admin_dashboard.jpg" width="250" alt="Admin module">
+  <br>
+  <em>Admin module</em>
+</p>
+
+### Messaging Module
+
+The Messaging Module supports communication between students and instructors. It provides a platform for announcements, academic guidance, responses to student questions, and bulletin updates.
+
+<p align="center">
+  <img src="assets/images/readme_images/student_message_screen.jpg" width="250" alt="Student messaging screen">
+  <br>
+  <em>Student messaging screen</em>
+</p>
+
+<p align="center">
+  <img src="assets/images/readme_images/admin_message_screen.jpg" width="250" alt="Admin messaging screen">
+  <br>
+  <em>Admin messaging screen</em>
+</p>
+
+### AI Learning Module
+
+The AI Learning Module is a future enhancement. It is expected to provide intelligent tutoring, automated explanations of biological structures, personalized learning recommendations, and conversational support based on microscope observations.
+
+## Achievements
+
+The project successfully achieved its primary objectives by developing a comprehensive mobile virtual learning platform for microscopy education.
+
+Major accomplishments include:
 
 - Authentication system
 - Virtual microscope viewer
@@ -452,21 +558,18 @@ Successfully implemented:
 - Annotation system
 - Polygon annotations
 - Quiz integration
-- Firestore-backed quiz loading
-- Notes notebook
 - Offline slide support
 - Firebase integration
 - Modular architecture
-- Message to Instructor and reply
-- Instructor bulletin to students
+- Student-to-instructor messaging and replies
+- Instructor bulletins for students
 - Cloudinary integration
 
+Together, these components provide an engaging, scalable, and feature-rich educational environment for students and instructors.
 
----
+## Lessons Learned
 
-# Lessons Learned
-
-Key lessons gained during development:
+The development process strengthened practical experience in:
 
 - Flutter state management
 - Firebase integration
@@ -476,69 +579,217 @@ Key lessons gained during development:
 - Educational software design
 - Interactive image annotation techniques
 - Git version control workflows
+- Building scalable and maintainable cross-platform applications
 
----
+## Challenges Faced
 
-# Future Enhancements
+<p align="center">
+  <img src="assets/images/readme_images/red_error.png" width="250" alt="Runtime error screen">
+  <br>
+  <em>Runtime issue encountered during development</em>
+</p>
 
-Planned improvements include:
+- Preventing runtime issues such as duplicate GlobalKeys, widget lifecycle errors, and state synchronization problems.
+- Resolving Gradle, Android SDK, and Firebase initialization issues during project setup.
+- Designing and implementing an interactive virtual microscope with smooth zooming and panning.
+- Developing a robust annotation system that supports shape placement, editing, resizing, movement, and polygon annotations.
+- Debugging Firestore data type mismatches and serialization/deserialization errors between Flutter models and cloud data.
+- Implementing offline learning support while maintaining consistency between locally cached and cloud-based resources.
+- Linking quizzes dynamically to microscope slides and resolving Firestore document retrieval and query challenges, especially NoSQL document IDs for quiz storage and retrieval.
+- Managing application state efficiently across multiple modules.
+- Managing GitHub workflows, including branch management, commits, merges, conflict resolution, and version consistency.
+- Configuring and integrating Firebase Authentication, Cloud Firestore, and Cloudinary.
+- Integrating authentication, microscope, hotspots, annotations, quizzes, messaging, and offline learning into one cohesive application.
 
-## AI Features
+## Future Enhancements
 
-- Specimen identification
+Planned future enhancements include AI-assisted, collaborative, and analytics-driven learning features.
+
+### AI Capabilities
+
+- Automated specimen identification
 - Intelligent tutoring
-- Automated explanations
-- Adaptive learning
+- Context-aware explanations
+- Adaptive learning pathways based on student progress and performance
 
-## Collaboration Features
+### Collaboration Features
 
 - Shared annotations
-- Classroom sessions
+- Live classroom sessions
+- Virtual practical demonstrations
 - Teacher feedback tools
 
-## Analytics
+### Analytics and Real-Time Learning
 
 - Learning progress tracking
 - Performance analytics
 - Student engagement metrics
-
-## Realtime Features
-
-- Live annotation updates
-- Collaborative learning
+- Real-time annotation updates
+- Collaborative microscope sessions
 - Classroom synchronization
 
----
+## Scalability Considerations
 
-# Scalability Considerations
+The application is designed with future expansion in mind. Planned improvements include:
 
-Future versions may incorporate:
+- Fine-grained role-based access control
+- Multi-school deployment with data isolation
+- A dedicated content management dashboard
+- More robust cloud storage architecture
+- Advanced caching mechanisms
+- Performance improvements for large slide collections
+- Reliability improvements for high-resolution image delivery
 
-- Role-based access control
-- Multi-school deployment
-- Content management dashboard
-- Dedicated cloud storage architecture
-- Advanced caching systems
+## Conclusion
 
----
+The Virtual Learning Platform provides a mobile-based alternative to conventional microscopy practical sessions by integrating virtual microscope slides, interactive annotations, hotspots, quizzes, offline learning, messaging, and cloud-based content management into a single application.
 
-# Repository Activity
+Built with Flutter, Firebase, and Cloudinary, the system offers an engaging and accessible learning experience for students while providing administrators with efficient tools for managing educational content. It also establishes a strong foundation for future enhancements such as AI-assisted learning, collaborative classroom features, and advanced learning analytics.
 
-Development has been managed using Git and GitHub.
+## Appendix: Project Structure
 
-Version control has been used to:
-
-- Track development progress
-- Manage feature branches
-- Merge functionality safely
-- Maintain project history
-
----
-
-# Conclusion
-
-Virtual Learning demonstrates the feasibility of providing practical science education through virtual laboratory experiences.
-
-The platform successfully combines virtual microscopy, offline learning, interactive annotations, notes, assessments, student-teacher engagment and cloud-based services into a single educational solution. Future development will focus on AI-assisted learning, collaborative educational tools, and large-scale deployment capabilities.
-
-**Future development**
+```text
+virtual_learning/
+├── android/
+├── ios/
+├── linux/
+├── macos/
+├── web/
+├── windows/
+├── test/
+├── assets/
+│   ├── images/
+│   ├── icons/
+│   ├── animations/
+│   ├── slides/
+│   └── fonts/
+├── lib/
+│   ├── main.dart
+│   ├── app.dart
+│   ├── firebase_options.dart
+│   ├── core/
+│   │   ├── constants/
+│   │   ├── services/
+│   │   │   ├── auth_service.dart
+│   │   │   ├── firestore_service.dart
+│   │   │   ├── storage_service.dart
+│   │   │   ├── cloudinary_service.dart
+│   │   │   ├── download_service.dart
+│   │   │   ├── progress_service.dart
+│   │   │   └── note_service.dart
+│   │   ├── theme/
+│   │   ├── utils/
+│   │   │   ├── validators.dart
+│   │   │   ├── helpers.dart
+│   │   │   └── extensions.dart
+│   │   └── routes/
+│   ├── data/
+│   │   ├── models/
+│   │   │   ├── user_model.dart
+│   │   │   ├── slide_model.dart
+│   │   │   ├── hotspot_model.dart
+│   │   │   ├── annotation_model.dart
+│   │   │   ├── annotation_shape.dart
+│   │   │   ├── quiz_model.dart
+│   │   │   ├── question_model.dart
+│   │   │   ├── progress_model.dart
+│   │   │   ├── note_model.dart
+│   │   │   └── message_model.dart
+│   │   ├── repositories/
+│   │   │   ├── auth_repository.dart
+│   │   │   ├── slide_repository.dart
+│   │   │   ├── hotspot_repository.dart
+│   │   │   ├── annotation_repository.dart
+│   │   │   ├── quiz_repository.dart
+│   │   │   ├── progress_repository.dart
+│   │   │   ├── notes_repository.dart
+│   │   │   └── message_repository.dart
+│   │   └── providers/
+│   ├── features/
+│   │   ├── auth/
+│   │   │   ├── screens/
+│   │   │   ├── widgets/
+│   │   │   ├── controllers/
+│   │   │   └── services/
+│   │   ├── dashboard/
+│   │   │   ├── screens/
+│   │   │   ├── widgets/
+│   │   │   └── controllers/
+│   │   ├── admin/
+│   │   │   ├── screens/
+│   │   │   ├── widgets/
+│   │   │   ├── controllers/
+│   │   │   ├── upload_slide/
+│   │   │   ├── hotspot_manager/
+│   │   │   ├── annotation_manager/
+│   │   │   └── quiz_manager/
+│   │   ├── microscope/
+│   │   │   ├── screens/
+│   │   │   ├── widgets/
+│   │   │   │   ├── slide_canvas.dart
+│   │   │   │   ├── hotspot_widget.dart
+│   │   │   │   ├── polygon_painter.dart
+│   │   │   │   └── annotation_overlay.dart
+│   │   │   ├── controllers/
+│   │   │   └── services/
+│   │   ├── annotation/
+│   │   │   ├── screens/
+│   │   │   │   └── annotation_designer_screen.dart
+│   │   │   ├── widgets/
+│   │   │   │   ├── annotation_canvas.dart
+│   │   │   │   ├── annotation_shape_widget.dart
+│   │   │   │   └── shape_picker_dialog.dart
+│   │   │   ├── controllers/
+│   │   │   │   └── annotation_editor_controller.dart
+│   │   │   └── models/
+│   │   ├── hotspot/
+│   │   │   ├── screens/
+│   │   │   ├── widgets/
+│   │   │   └── controllers/
+│   │   ├── quiz/
+│   │   │   ├── screens/
+│   │   │   │   └── quiz_screen.dart
+│   │   │   ├── widgets/
+│   │   │   ├── controllers/
+│   │   │   └── services/
+│   │   ├── notes/
+│   │   │   ├── screens/
+│   │   │   ├── widgets/
+│   │   │   ├── controllers/
+│   │   │   └── services/
+│   │   ├── downloads/
+│   │   │   ├── screens/
+│   │   │   ├── widgets/
+│   │   │   └── services/
+│   │   ├── progress/
+│   │   │   ├── screens/
+│   │   │   ├── widgets/
+│   │   │   └── controllers/
+│   │   ├── messaging/
+│   │   │   ├── screens/
+│   │   │   ├── widgets/
+│   │   │   ├── controllers/
+│   │   │   └── services/
+│   │   └── ai/
+│   │       ├── screens/
+│   │       ├── widgets/
+│   │       ├── services/
+│   │       └── models/
+│   ├── widgets/
+│   │   ├── animated_character.dart
+│   │   ├── loading_indicator.dart
+│   │   ├── custom_button.dart
+│   │   ├── custom_textfield.dart
+│   │   ├── custom_dialog.dart
+│   │   ├── app_drawer.dart
+│   │   ├── empty_state.dart
+│   │   └── error_widget.dart
+│   └── generated/
+├── firebase.json
+├── firestore.rules
+├── firestore.indexes.json
+├── pubspec.yaml
+├── analysis_options.yaml
+├── README.md
+└── LICENSE
+```

@@ -1,8 +1,6 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../../../data/models/hotspot_model.dart';
 
 class PolygonPainter extends CustomPainter {
   final List<Offset> points;

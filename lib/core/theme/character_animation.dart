@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 
 class CharacterAnimation extends StatefulWidget {
   final String text;
+  final Color color;
+  final bool animateDots;
 
   const CharacterAnimation({
     super.key,
-    required this.text, required Color color,
+    required this.text,
+    required this.color,
+    this.animateDots = false,
   });
 
   @override
-  State<CharacterAnimation> createState() =>
-      _CharacterAnimationState();
+  State<CharacterAnimation> createState() => _CharacterAnimationState();
 }
 
-class _CharacterAnimationState
-    extends State<CharacterAnimation>
+class _CharacterAnimationState extends State<CharacterAnimation>
     with SingleTickerProviderStateMixin {
-
   late AnimationController _controller;
   late Animation<double> _fontSizeAnimation;
 
@@ -32,12 +33,7 @@ class _CharacterAnimationState
     _fontSizeAnimation = Tween<double>(
       begin: 14,
       end: 18,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -46,22 +42,41 @@ class _CharacterAnimationState
     super.dispose();
   }
 
+  double _dotOpacity(int index) {
+    final progress = (_controller.value + (index * 0.22)) % 1;
+    final wave = progress < 0.5 ? progress * 2 : (1 - progress) * 2;
+    return 0.35 + (Curves.easeInOut.transform(wave) * 0.65);
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _fontSizeAnimation,
       builder: (context, child) {
         return Padding(
-          padding:
-          const EdgeInsets.symmetric(horizontal: 20),
-          child: Text(
-            widget.text,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Text.rich(
+            TextSpan(
+              text: widget.text,
+              children: widget.animateDots
+                  ? List.generate(
+                      3,
+                      (index) => TextSpan(
+                        text: '.',
+                        style: TextStyle(
+                          color: widget.color.withValues(
+                            alpha: _dotOpacity(index),
+                          ),
+                        ),
+                      ),
+                    )
+                  : null,
+            ),
             textAlign: TextAlign.center,
-            softWrap: true,
             style: TextStyle(
-              fontSize: _fontSizeAnimation.value,
+              fontSize: widget.animateDots ? 16 : _fontSizeAnimation.value,
               fontWeight: FontWeight.bold,
-              //color: const Color(0xFFDC3F3F),
+              color: widget.color,
             ),
           ),
         );
