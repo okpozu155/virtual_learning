@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "440708813081",
+    "project_id": "virtual-learning-7fb6c",
+    "storage_bucket": "virtual-learning-7fb6c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:440708813081:android:dcaa9d4e502008d3eab588",
+        "android_client_info": {
+          "package_name": "com.example.virtual_learning"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "440708813081-peaub00crjr90bm7579v8quulor7d4h5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGnJJ_MPUIPxOEVb7fMl586FwPu30r9GU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "440708813081-peaub00crjr90bm7579v8quulor7d4h5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

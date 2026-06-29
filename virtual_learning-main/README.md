@@ -793,60 +793,49 @@ virtual_learning/
 ├── README.md
 └── LICENSE
 ```
-# Developer Installation & Setup Guide
+## Getting Started
 
-This guide provides instructions for setting up the Virtual Learning Platform development environment locally.
+Follow these instructions to set up the project locally for development and testing.
 
-## Prerequisites
+### Prerequisites
 
-Ensure you have the following tools installed on your local machine before starting:
+Before installing the application, ensure you have the following tools installed on your local machine:
 
 * **Flutter SDK**: Version 3.19.x or higher
 * **Dart SDK**: Version 3.3.x or higher
-* **Java Development Kit (JDK)**: Version 17 or higher (required for Android builds)
 * **Android Studio / VS Code**: Equipped with Flutter and Dart extensions
+* **Java Development Kit (JDK)**: Version 17 or higher (required for Android builds)
 * **Git**: For version control management
 
-## Installation Steps
+### Installation & Setup Guide
 
-### 1. Clone the Repository
-Open your terminal and clone the repository, then navigate into the project directory:
-```bash
-git clone https://github.com/okpozu155/virtual_learning.git
-cd virtual_learning
-```
+Follow these step-by-step instructions to get your development environment running:
 
-### 2. Install Project Dependencies
-Fetch all the required Flutter and Dart packages defined in the `pubspec.yaml` file:
-```bash
-flutter pub get
-```
-
-## Backend Configuration
-
-### 3. Firebase Setup
-The application uses Firebase for Authentication, Cloud Firestore, and user roles.
-1. Go to the [Firebase Console](https://google.com).
-2. Create a new Firebase project named `Virtual Learning`.
-3. Add an Android app to the project using your app's package name (found in `android/app/build.gradle`).
-4. Download the generated `google-services.json` file.
-5. Move the `google-services.json` file directly into your local project directory at:
-   ```text
-   virtual_learning/android/app/google-services.json
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/okpozu155/virtual_learning.git
+   cd virtual_learning
    ```
-6. Enable **Email/Password** provider under Build > Authentication > Sign-in method.
-7. Create a **Cloud Firestore** NoSQL database in test mode.
 
-### 4. Cloudinary Setup
-High-resolution microscope images are hosted via Cloudinary.
-1. Sign up or log into your [Cloudinary Console](https://cloudinary.com).
-2. Locate your **Cloud Name** and **Upload Presets** from the dashboard.
-3. If your code extracts these from an environment or constant file, make sure to update your local keys matching your Cloudinary environment variables.
+2. **Install Dependencies**
+   Fetch all the required packages defined in the `pubspec.yaml` file:
+   ```bash
+   flutter pub get
+   ```
 
-## Running the Application
+3. **Configure Backend Services**
+   * **Firebase Setup**: 
+     * 1. Go to the [Firebase Console](https://google.com).
+       2. Create a new Firebase project named `Virtual Learning`.
+     * Register your Android/Web app packages.
+     * Download the `google-services.json` file and place it in the `android/app/` directory.
+   * **Cloudinary Setup**:
+     * Set up your Cloudinary storage account for high-resolution microscope image delivery.
+     * Update your environment keys or configuration files with your Cloudinary cloud name and upload presets.
 
-### 5. Launching the App
-Ensure you have an Android emulator running or a physical Android device connected with USB Debugging enabled. Run the following command:
-```bash
-flutter run
-```
+4. **Run the Application**
+   Ensure your emulator is active or your physical device is connected, then execute:
+   ```bash
+   flutter run
+   ```
+
