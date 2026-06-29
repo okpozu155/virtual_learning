@@ -1,6 +1,6 @@
 # Virtual Learning Platform
 
-Virtual Learning is a Flutter-based Android educational platform that gives students access to virtual microscopy experiences and interactive learning resources without requiring physical laboratory equipment.
+Virtual Learning is a Flutter-based Android educational platform that gives students access to virtual microscopy experiences and interactive learning resources without requiring physical laboratory equipment. (DEMO VIDEO LINK: https://drive.google.com/file/d/1vc-PoUynUI_BybOGOOI6m9RO0vBn6V1r/view?usp=drivesdk)
 
 The project addresses challenges faced by schools and learners in environments where access to laboratories, microscopes, reliable internet connectivity, and educational resources may be limited. It also supports instructor and student communication through an admin-to-student messaging and response system.
 
